@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>meterless — flat-rate GPU studios for creators</title>
+<title>meterless · flat-rate GPU studios for creators</title>
 <meta name="description" content="Flat-rate GPU studios for creative AI work. Your workspace, your hours, one price. Launching autumn 2026.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -64,13 +64,13 @@
   }
   @keyframes statelabel{
     0%,30%{content:'running'}
-    32%,62%{content:'paused — hours held'}
+    32%,62%{content:'paused · hours held'}
     64%,92%{content:'running'}
     100%{content:'running'}
   }
   @media (prefers-reduced-motion:reduce){
     .meter-fill{animation:none;transform:scaleX(.72)}
-    .meter-caption .state::after{content:'paused — hours held';animation:none}
+    .meter-caption .state::after{content:'paused · hours held';animation:none}
     .pulse{animation:none}
   }
   footer{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.06em;
@@ -83,8 +83,7 @@
   <main>
     <div class="kicker">GPU studios · flat rate</div>
     <h1>Your studio. Your hours.<br><span class="accent">One price.</span></h1>
-    <p class="sub">Flat-rate GPU workspaces for creative AI work. Pick a plan, open your studio,
-       and pause whenever you like — your hours wait, your work is saved, and the price is the price.</p>
+    <p class="sub">Flat-rate GPU studios for creative AI work. Pick a plan, open your studio, and pause whenever you like. Your hours stop, your work is saved, and the price is the price.</p>
     <div class="meter" aria-hidden="true">
       <div class="meter-track"><div class="meter-fill"></div></div>
       <div class="meter-caption"><span>your hours</span><span class="state"></span></div>
