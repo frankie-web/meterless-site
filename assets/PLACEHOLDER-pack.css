@@ -1,0 +1,20 @@
+/* PLACEHOLDER-NOT-FOR-PUBLISH: stands in for the pack's stylesheet (ruling 553). */
+:root{--ink:#152238;--teal:#0F8C7E;--line:#DDE3EA;--wash:#F7F8FA}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:#fff;
+     font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.placeholder-banner{background:#B42318;color:#fff;font-weight:700;padding:10px 24px}
+.site-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px}
+.site-header nav a{margin-left:16px;color:var(--teal)}
+.logo{font-weight:700;font-size:1.4rem;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.logo .dot{color:var(--teal)}
+section{max-width:720px;margin:0 auto;padding:56px 24px;border-bottom:1px solid var(--line)}
+#hero{text-align:center;min-height:70vh}
+h1{font-size:clamp(1.8rem,6vw,3rem);letter-spacing:-.02em;line-height:1.15}
+form.join{max-width:420px;margin:24px auto 0;display:flex;flex-direction:column;gap:12px}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;padding:0;margin:-1px}
+input[type="email"]{font:16px/1.4 inherit;padding:14px 16px;border:1px solid var(--line);border-radius:10px}
+button{font:600 16px/1.4 system-ui,sans-serif;padding:14px 20px;border:none;border-radius:999px;background:var(--ink);color:#fff;cursor:pointer}
+.css-image{height:120px;background:var(--wash) url("/assets/PLACEHOLDER-mark.svg") center/80px no-repeat;border-radius:12px}
+.site-footer{padding:28px 24px;text-align:center;font-size:.85rem;color:#6B7486}
+.site-footer a{color:var(--teal)}
