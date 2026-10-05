@@ -86,7 +86,7 @@ def site(tmp_path):
 
 def _reds(site_and_pins, kind=None):
     s, pins = site_and_pins
-    reds, _info = check_site.check(s, pins=pins)
+    reds, _info = check_site.check(s, pins=pins, spec=False)
     return [r for r in reds if kind is None or r["check"] == kind]
 
 
@@ -130,7 +130,7 @@ def test_NEGATIVE_CONTROL_a_third_party_url_in_a_script_file_goes_red(site):
 
 def test_an_offsite_anchor_is_navigation_listed_not_red(site):
     s, pins = site
-    reds, info = check_site.check(s, pins=pins)
+    reds, info = check_site.check(s, pins=pins, spec=False)
     assert reds == []
     assert any("example.org/x" in n for n in info["navigation_offsite"])
 
@@ -279,7 +279,7 @@ def test_NEGATIVE_CONTROL_a_source_matching_only_the_prefix_is_refused(site, tmp
     real = pins["privacy"][1]
     tail = "0" * 52 if real[12:] != "0" * 52 else "1" * 52
     wrong = dict(pins, privacy=(pins["privacy"][0], real[:12] + tail))
-    reds, _ = check_site.check(s, pins=wrong)
+    reds, _ = check_site.check(s, pins=wrong, spec=False)
     assert any(r["check"] == "legal" and "privacy" in r["file"] for r in reds)
     with pytest.raises(build_legal_pages.PinRefused):
         build_legal_pages.build(s, pins=wrong)
@@ -297,11 +297,10 @@ def test_NEGATIVE_CONTROL_a_shortened_pin_refuses_at_import(tmp_path):
         spec.loader.exec_module(importlib.util.module_from_spec(spec))
 
 
-def test_the_real_tree_has_no_red_outside_the_pending_pack():
-    """Before the pack lands the only reds allowed are the placeholders and the two missing pinned
-    sources. After it lands, nothing is allowed; this test then holds trivially."""
+def test_the_real_tree_is_GREEN():
+    """The pack has landed (ruling 561): the real tree, with every SPEC check, has no red at all."""
     reds, _info = check_site.check(REAL)
-    assert [r for r in reds if r["check"] not in ("placeholder", "legal")] == []
+    assert reds == [], reds
 
 
 # ── unsupported markdown: FAIL CLOSED (ruling 553 Q7) ──────────────────────────────────────────
@@ -341,7 +340,7 @@ def test_NEGATIVE_CONTROL_an_unsupported_construct_refuses_the_build_and_names_i
     planted_line = data.decode().split("\n").index(line.split("\n")[0]) + 1
     assert f"line {planted_line}:" in text or construct == "unclosed code fence", text
     assert (s / "privacy" / "index.html").read_bytes() == before, "a refused build wrote a page"
-    reds, _ = check_site.check(s, pins=pins)
+    reds, _ = check_site.check(s, pins=pins, spec=False)
     assert any(r["check"] == "legal" and "unsupported markdown" in r["detail"] for r in reds)
 
 
@@ -356,4 +355,4 @@ def test_NEGATIVE_CONTROL_an_unsupported_construct_refuses_the_build_and_names_i
 def test_supported_text_that_LOOKS_like_markup_still_builds(site, line):
     s, pins, _data = _plant_source(site, line)
     build_legal_pages.build(s, pins=pins)
-    assert check_site.check(s, pins=pins)[0] == []
+    assert check_site.check(s, pins=pins, spec=False)[0] == []

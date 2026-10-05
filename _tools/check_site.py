@@ -20,6 +20,7 @@ Checks, each with a negative control in `test_check_site.py`:
   markdown     no .md file is published (GitHub Pages would render it as a route of its own).
   waitlist     / and /waitlist carry the form that posts to app.meterless.com/waitlist with an
                email field (the waitlist path is unchanged).
+  spec*        SPEC.md section 2 of the PM pack, statically (see spec_checks.py).
 
 Published means what GitHub Pages serves: every file except paths with a component starting with
 an underscore or a dot, which Jekyll skips.
@@ -38,6 +39,7 @@ sys.path.insert(0, str(HERE))
 
 import legal_pins  # noqa: E402
 import mdpage      # noqa: E402
+import spec_checks  # noqa: E402
 
 SITE = HERE.parent
 SITE_HOSTS = {"meterless.com", "www.meterless.com"}
@@ -143,7 +145,8 @@ def _page_url(rel):
     return "https://meterless.com/" + "/".join(parts)
 
 
-def check(site=SITE, pins=None):
+def check(site=SITE, pins=None, spec=True):
+    """`spec=False` only for the gate's own synthetic fixtures, which are not the launch page."""
     site = pathlib.Path(site)
     pins = pins or legal_pins.PINS
     reds, info = [], {"navigation_offsite": [], "files": {}}
@@ -235,6 +238,11 @@ def check(site=SITE, pins=None):
         missing = mdpage.source_links(data.decode("utf-8")) - mdpage.page_links(served)
         if missing:
             red("legal", f"{route}/index.html", f"source links missing from the page: {sorted(missing)[:5]}")
+
+    # SPEC.md section 2 of the PM pack (ruling 561); the browser half is in the QA harness
+    if spec:
+        for kind, where, detail in spec_checks.run(site, [rel for rel, _p in files]):
+            red(kind, where, detail)
 
     sizes = info["files"]
     largest = max(sizes.items(), key=lambda kv: kv[1]) if sizes else ("", 0)

@@ -1,44 +1,254 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- PLACEHOLDER-NOT-FOR-PUBLISH: this page is the slot for the PM pack's launch page (ruling 553).
-     Replace this file and assets/PLACEHOLDER-* with the pack's page and its self-hosted assets. -->
-<title>PLACEHOLDER launch page · meterless</title>
-<link rel="stylesheet" href="/assets/PLACEHOLDER-pack.css">
+<title>meterless · flat-rate GPU studios for creators</title>
+<meta name="description" content="Flat-rate GPU studios for creative AI work. Your workspace, your hours, one price. Launching autumn 2026.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:700;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(assets/fonts/inter-latin-var.woff2) format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/ibm-plex-mono-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url(assets/fonts/ibm-plex-mono-latin-500-normal.woff2) format('woff2')}
+body{margin:0;background:#FFFFFF}
+a{color:#0F8C7E}a:hover{color:#152238}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wall{position:absolute;top:-30%;left:32%;right:-22%;bottom:-30%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;transform:rotate(-9deg)}
+.col{display:flex;flex-direction:column;gap:18px;animation:up 76s linear infinite}
+.col.c2{animation-duration:62s;margin-top:-140px}
+.col.c3{animation-duration:88s;margin-top:-60px}
+.col.c4{animation-duration:70s;margin-top:-220px}
+.col img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:16px;display:block}
+@keyframes up{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+.w{display:inline-block;opacity:0;margin-right:.28em;animation:wordin .35s ease-out both}
+@keyframes wordin{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
+.resolve{animation:resolve 1.9s cubic-bezier(.2,.7,.2,1) both}
+.noise{animation:noiseout 1.9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes resolve{0%{filter:blur(32px) saturate(.2) brightness(.5);transform:scale(1.06)}100%{filter:blur(0) saturate(1) brightness(1);transform:scale(1)}}
+@keyframes noiseout{0%{opacity:.95}100%{opacity:0}}
+.caret{display:inline-block;width:2px;height:1.05em;background:#5FD3C4;vertical-align:-0.15em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.btn:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #5FD3C4;outline-offset:3px}
+@media (max-width: 760px){.navlink{display:none}.hub{grid-template-columns:1fr!important;justify-items:center}.hub>div{align-items:center!important}.hub>div>div{justify-content:center!important}.wall{left:-10%;right:-10%;grid-template-columns:repeat(3,minmax(0,1fr));opacity:.5}}
+@media (prefers-reduced-motion: reduce){.col,.w,.resolve,.noise,.caret{animation:none}.w{opacity:1}.noise{opacity:0}}
+html{scroll-behavior:smooth}
+[hidden]{display:none!important}
+body.paused .col,body.paused .w,body.paused .caret,body.paused .resolve,body.paused .noise{animation-play-state:paused}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
-  <div class="placeholder-banner">PLACEHOLDER-NOT-FOR-PUBLISH: the pack page drops in here</div>
-  <header class="site-header" id="top">
-    <a class="logo" href="/">meterless<span class="dot">.</span></a>
-    <nav><a href="/privacy/">Privacy</a> <a href="/cookies/">Cookies</a></nav>
-  </header>
-  <main>
-    <section id="hero">
-      <img class="mark" src="/assets/PLACEHOLDER-mark.svg" alt="" width="64" height="64">
-      <h1>Placeholder hero</h1>
-      <p class="sub">Section one of the placeholder. The pack replaces every word on this page.</p>
-    <form class="join" method="post" action="https://app.meterless.com/waitlist">
-      <label class="visually-hidden" for="wl-email">Email address</label>
-      <input id="wl-email" type="email" name="email" required
-             autocomplete="email" inputmode="email" placeholder="you@example.com">
-      <button type="submit">Join the waitlist</button>
-    </form>
-    </section>
-    <section id="section-two">
-      <h2>Placeholder section two</h2>
-      <p>Section two exists so the harness proves it photographs every section, not only the first.</p>
-    </section>
-    <section id="section-three">
-      <h2>Placeholder section three</h2>
-      <p>Section three, with a self-hosted image loaded through CSS.</p>
-      <div class="css-image" role="img" aria-label=""></div>
-    </section>
-  </main>
-  <footer class="site-footer">
-    <a href="/privacy/">Privacy</a> · <a href="/cookies/">Cookies</a> ·
-    <a href="mailto:support@meterless.com">support@meterless.com</a>
-  </footer>
+<div style="font-family: Inter, system-ui, sans-serif; color: #152238; background: #FFFFFF; width: 100%;">
+
+<section style="position: relative; background: #0B1526; color: #FFFFFF; overflow: hidden;">
+<div aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none;">
+<div class="wall">
+<div class="col"><img src="assets/media/R1_z-image-turbo_4x5_s1077952940.jpg" alt=""><img src="assets/media/w_hb.jpg" alt=""><img src="assets/media/Li_z-image-turbo_4x5_s541717484.jpg" alt=""><img src="assets/media/GEN-W1-4x5-1.jpg" alt=""><img src="assets/media/R1_z-image-turbo_4x5_s1077952940.jpg" alt=""><img src="assets/media/w_hb.jpg" alt=""><img src="assets/media/Li_z-image-turbo_4x5_s541717484.jpg" alt=""><img src="assets/media/GEN-W1-4x5-1.jpg" alt=""></div>
+<div class="col c2"><img src="assets/media/Lk_z-image-turbo_4x5_s661337207.jpg" alt=""><img src="assets/media/GEN-W1-4x5-2.jpg" alt=""><img src="assets/media/Lb_z-image-turbo_4x5_s325810089.jpg" alt=""><img src="assets/media/w_horse.jpg" alt=""><img src="assets/media/Lk_z-image-turbo_4x5_s661337207.jpg" alt=""><img src="assets/media/GEN-W1-4x5-2.jpg" alt=""><img src="assets/media/Lb_z-image-turbo_4x5_s325810089.jpg" alt=""><img src="assets/media/w_horse.jpg" alt=""></div>
+<div class="col c3"><img src="assets/media/Lg_z-image-turbo_4x5_s1744879545.jpg" alt=""><img src="assets/media/R1_z-image-turbo_4x5_s409629338.jpg" alt=""><img src="assets/media/GEN-W1-4x5-3.jpg" alt=""><img src="assets/media/La_z-image-turbo_4x5_s2127781645.jpg" alt=""><img src="assets/media/Lg_z-image-turbo_4x5_s1744879545.jpg" alt=""><img src="assets/media/R1_z-image-turbo_4x5_s409629338.jpg" alt=""><img src="assets/media/GEN-W1-4x5-3.jpg" alt=""><img src="assets/media/La_z-image-turbo_4x5_s2127781645.jpg" alt=""></div>
+<div class="col c4"><img src="assets/media/GEN-W1-4x5-4.jpg" alt=""><img src="assets/media/Lh_z-image-turbo_4x5_s1047728421.jpg" alt=""><img src="assets/media/w_horse2.jpg" alt=""><img src="assets/media/Lc_z-image-turbo_4x5_s1905898371.jpg" alt=""><img src="assets/media/GEN-W1-4x5-4.jpg" alt=""><img src="assets/media/Lh_z-image-turbo_4x5_s1047728421.jpg" alt=""><img src="assets/media/w_horse2.jpg" alt=""><img src="assets/media/Lc_z-image-turbo_4x5_s1905898371.jpg" alt=""></div>
+</div>
+<div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,21,38,.97) 0%, rgba(11,21,38,.9) 38%, rgba(11,21,38,.6) 70%, rgba(11,21,38,.45) 100%);"></div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 180px; background: linear-gradient(180deg, rgba(11,21,38,0), #0B1526);"></div>
+</div>
+
+<div style="position: sticky; top: 0; z-index: 40; background: rgba(11,21,38,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(185,196,212,.12);"><div style="max-width: 1240px; margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px;"><img src="assets/media/meterless_wordmark_white_1200.png" alt="meterless" style="width: 148px; height: auto; display: block;"><div style="display: flex; align-items: center; gap: 22px;"><a class="navlink" href="#studios" style="color: #B9C4D4; font-size: 15px; text-decoration: none;">Studios</a><a class="navlink" href="#pause" style="color: #B9C4D4; font-size: 15px; text-decoration: none;">How pause works</a><a class="btn" href="#join" style="color: #0B1526; font-size: 15px; font-weight: 600; text-decoration: none; padding: 11px 20px; border-radius: 999px; background: #5FD3C4; box-shadow: 0 6px 24px rgba(95,211,196,.35); white-space: nowrap;">Join the waitlist</a></div></div></div>
+
+<div style="position: relative; max-width: 1240px; margin: 0 auto; padding: 80px 28px 112px; display: flex; flex-wrap: wrap; gap: 56px 64px; align-items: center;">
+<div style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 26px;">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 800; font-size: clamp(42px, 4.8vw, 70px); line-height: 0.98; letter-spacing: -0.035em;">Pause.<br>Your work stays.<br>Your hours stop.</h1>
+<p style="margin: 0; font-size: 21px; line-height: 1.45; font-weight: 500; max-width: 32ch;">You make pictures, clips, music, models and projects. Thinking time belongs to you.</p>
+<p style="margin: 0; font-size: 17px; line-height: 1.65; color: #B9C4D4; max-width: 46ch;">Flat-rate, prepaid GPU hours for independent AI creators. You buy a monthly plan of hours. You never see a per-hour price. You open a studio on a warm machine with the tools already there.</p>
+<form method="post" action="https://app.meterless.com/waitlist" style="display: flex; flex-wrap: wrap; gap: 10px; max-width: 520px; padding: 8px; border-radius: 16px; background: rgba(21,34,56,.88); border: 1px solid rgba(185,196,212,.2);">
+<label for="e1" class="sr">Email address</label>
+<input name="email" required autocomplete="email" inputmode="email" id="e1" type="email" placeholder="you@example.com" style="flex: 1 1 220px; min-width: 0; height: 52px; box-sizing: border-box; padding: 0 16px; border: 0; border-radius: 10px; background: transparent; color: #FFFFFF; font: 400 17px Inter, sans-serif;">
+<button class="btn" type="submit" style="height: 52px; padding: 0 24px; border: 0; border-radius: 10px; background: #5FD3C4; color: #0B1526; font: 600 17px Inter, sans-serif; cursor: pointer;">Join the waitlist</button>
+</form>
+<a href="/privacy" style="font-size: 13px; color: #B9C4D4; text-decoration: underline;">Privacy Notice</a>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #B9C4D4; max-width: 52ch;">Launching autumn 2026. The founding cohort is by invitation from the waitlist. Founding members keep their launch price for 12 months while their plan stays paid.</p>
+</div>
+
+<div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+<div style="border-radius: 20px; overflow: hidden; background: rgba(21,34,56,.92); border: 1px solid rgba(185,196,212,.25); box-shadow: 0 40px 100px rgba(0,0,0,.55);">
+<div id="reel" aria-live="polite"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; padding: 8px 8px 8px 16px; border-radius: 14px; background: rgba(21,34,56,.88); border: 1px solid rgba(185,196,212,.2);">
+<span id="st-run" style="display: flex; align-items: center; gap: 10px; font-size: 15px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: #5FD3C4; display: block;"></span>Running</span>
+<span id="st-pause" hidden style="display: flex; align-items: center; gap: 10px; font-size: 15px;"><span style="width: 12px; height: 12px; box-sizing: border-box; border: 2.5px solid #5FD3C4; border-radius: 50%; display: block;"></span>Paused. Hours stop.</span>
+<div style="display: flex; gap: 8px;">
+<button class="btn" type="button" id="btn-next" style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid rgba(185,196,212,.4); background: transparent; color: #FFFFFF; font: 500 15px Inter, sans-serif; cursor: pointer;">Next sentence</button>
+<button class="btn" type="button" id="btn-toggle" aria-pressed="false" style="height: 44px; padding: 0 20px; border-radius: 10px; border: 0; background: #FFFFFF; color: #0B1526; font: 600 15px Inter, sans-serif; cursor: pointer;">Pause</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+<section style="background: #0B1526; color: #FFFFFF;">
+<div style="max-width: 1240px; margin: 0 auto; padding: 112px 28px; display: flex; flex-direction: column; gap: 52px;">
+<div style="display: flex; flex-wrap: wrap; gap: 24px 96px; align-items: flex-end; justify-content: space-between;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 800; font-size: clamp(38px, 4.6vw, 68px); line-height: 1.0; letter-spacing: -0.03em; max-width: 13ch;">Each one started as a sentence.</h2>
+<p style="margin: 0; flex: 0 1 420px; font-size: 18px; line-height: 1.6; color: #B9C4D4;">Every clip here was made in the Video studio from the sentence beneath it. Wan 2.2, open model · unedited.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 40px 28px;">
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 14px;"><div style="border-radius: 16px; overflow: hidden; background: #000000; box-shadow: 0 24px 60px rgba(0,0,0,.45);"><video src="assets/media/R1_wan22-t2v-a14b_s1698356521.mp4" poster="assets/media/R1_z-image-turbo_16x9_s206941868.jpg" autoplay muted loop playsinline preload="metadata" aria-label="A whale made of clear glass swimming through golden clouds above a desert at sunset, made on the meterless Video studio" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;"></video></div><figcaption class="mono" style="font-size: 14px; line-height: 1.6; color: #B9C4D4;"><span style="color: #5FD3C4;">&gt;</span> A colossal whale made of clear liquid glass swims slowly through golden clouds above a vast desert at sunset, sunlight refracting through its body, cinematic tracking shot, epic scale.</figcaption></figure>
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 14px;"><div style="border-radius: 16px; overflow: hidden; background: #000000; box-shadow: 0 24px 60px rgba(0,0,0,.45);"><video src="assets/media/r4_web.mp4" poster="assets/media/r4_poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="A copper hummingbird hovering beside a glowing flower with sparks drifting, made on the meterless Video studio" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;"></video></div><figcaption class="mono" style="font-size: 14px; line-height: 1.6; color: #B9C4D4;"><span style="color: #5FD3C4;">&gt;</span> Extreme slow motion, a hummingbird made of molten copper hovers beside a glowing flower, sparks drifting through the air, dark background, macro.</figcaption></figure>
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 14px;"><div style="border-radius: 16px; overflow: hidden; background: #000000; box-shadow: 0 24px 60px rgba(0,0,0,.45);"><video src="assets/media/r5_web.mp4" poster="assets/media/r5_poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="A black horse galloping through shallow water at dawn as white birds rise, made on the meterless Video studio" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;"></video></div><figcaption class="mono" style="font-size: 14px; line-height: 1.6; color: #B9C4D4;"><span style="color: #5FD3C4;">&gt;</span> A black horse gallops through shallow water at dawn, and each splash of water transforms into a flock of white birds taking flight, slow motion, cinematic.</figcaption></figure>
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 14px;"><div style="border-radius: 16px; overflow: hidden; background: #000000; box-shadow: 0 24px 60px rgba(0,0,0,.45);"><video src="assets/media/p6c_web.mp4" poster="assets/media/p6c_poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Turquoise waves crashing against white chalk cliffs on a bright summer morning, made on the meterless Video studio" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;"></video></div><figcaption class="mono" style="font-size: 14px; line-height: 1.6; color: #B9C4D4;"><span style="color: #5FD3C4;">&gt;</span> Enormous turquoise waves roll in and crash against white chalk cliffs on a bright summer morning, sunlight sparkling on the water, slow aerial tracking shot, cinematic.</figcaption></figure>
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 14px;"><div style="border-radius: 16px; overflow: hidden; background: #000000; box-shadow: 0 24px 60px rgba(0,0,0,.45);"><video src="assets/media/p5b_web.mp4" poster="assets/media/p5b_poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="A towering storm cloud over an empty prairie at dusk with lightning and gold light beneath, made on the meterless Video studio" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;"></video></div><figcaption class="mono" style="font-size: 14px; line-height: 1.6; color: #B9C4D4;"><span style="color: #5FD3C4;">&gt;</span> A massive rotating storm cloud towers over an empty prairie at dusk, lightning flickering inside it, golden light breaking through beneath, slow wide time-lapse, cinematic.</figcaption></figure>
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 14px;"><div style="border-radius: 16px; overflow: hidden; background: #000000; box-shadow: 0 24px 60px rgba(0,0,0,.45);"><video src="assets/media/p6a_web.mp4" poster="assets/media/p6a_poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="A waterfall plunging into a green canyon on a sunny day with mist and a rainbow, made on the meterless Video studio" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;"></video></div><figcaption class="mono" style="font-size: 14px; line-height: 1.6; color: #B9C4D4;"><span style="color: #5FD3C4;">&gt;</span> A powerful waterfall plunges into a lush green canyon on a bright sunny day, mist rising and a rainbow forming, slow aerial push-in, cinematic, epic scale.</figcaption></figure>
+</div>
+</div>
+</section>
+
+<section id="studios" style="background: #F7F8FA;">
+<div style="max-width: 1240px; margin: 0 auto; padding: 112px 28px; display: flex; flex-direction: column; gap: 48px;">
+<div style="display: flex; flex-wrap: wrap; gap: 24px 96px; align-items: flex-end; justify-content: space-between;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 800; font-size: clamp(38px, 4.6vw, 68px); line-height: 1.0; letter-spacing: -0.03em;">Six studios.<br>One plan of hours.</h2>
+<p style="margin: 0; flex: 0 1 380px; font-size: 18px; line-height: 1.6; color: #4A5568;">Choose the studio that matches the job.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px;">
+<article style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid #E3E7EE; display: flex; flex-direction: column;">
+<img src="assets/media/Le_z-image-turbo_4x5_s1226351422.jpg" alt="Snow-covered peaks rising above a sea of clouds at sunrise, made on the meterless Image studio" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block;">
+<div style="padding: 22px 24px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 28px;">Image</h3><p style="margin: 0; font-size: 16px; color: #4A5568;">Make pictures from a description.</p></div>
+</article>
+<article style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid #E3E7EE; display: flex; flex-direction: column;">
+<video src="assets/media/r5_web.mp4" poster="assets/media/r5_poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="A black horse galloping through shallow water at dawn as white birds rise, made on the meterless Video studio" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block;"></video>
+<div style="padding: 22px 24px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 28px;">Video</h3><p style="margin: 0; font-size: 16px; color: #4A5568;">Turn a picture or a few words into a short clip.</p></div>
+</article>
+<article style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid #E3E7EE; display: flex; flex-direction: column;">
+<div style="aspect-ratio: 16 / 10; background: #152238; display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 28px; box-sizing: border-box;">
+<svg viewBox="0 0 400 80" width="100%" height="80" fill="#5FD3C4" aria-hidden="true"><rect x="0" y="31" width="6" height="18" rx="3"></rect><rect x="10" y="25" width="6" height="30" rx="3"></rect><rect x="20" y="17" width="6" height="46" rx="3"></rect><rect x="30" y="29" width="6" height="22" rx="3"></rect><rect x="40" y="10" width="6" height="60" rx="3"></rect><rect x="50" y="21" width="6" height="38" rx="3"></rect><rect x="60" y="14" width="6" height="52" rx="3"></rect><rect x="70" y="5" width="6" height="70" rx="3"></rect><rect x="80" y="18" width="6" height="44" rx="3"></rect><rect x="90" y="26" width="6" height="28" rx="3"></rect><rect x="100" y="12" width="6" height="56" rx="3"></rect><rect x="110" y="8" width="6" height="64" rx="3"></rect><rect x="120" y="20" width="6" height="40" rx="3"></rect><rect x="130" y="28" width="6" height="24" rx="3"></rect><rect x="140" y="16" width="6" height="48" rx="3"></rect><rect x="150" y="4" width="6" height="72" rx="3"></rect><rect x="160" y="11" width="6" height="58" rx="3"></rect><rect x="170" y="22" width="6" height="36" rx="3"></rect><rect x="180" y="27" width="6" height="26" rx="3"></rect><rect x="190" y="15" width="6" height="50" rx="3"></rect><rect x="200" y="7" width="6" height="66" rx="3"></rect><rect x="210" y="19" width="6" height="42" rx="3"></rect><rect x="220" y="25" width="6" height="30" rx="3"></rect><rect x="230" y="13" width="6" height="54" rx="3"></rect><rect x="240" y="9" width="6" height="62" rx="3"></rect><rect x="250" y="23" width="6" height="34" rx="3"></rect><rect x="260" y="30" width="6" height="20" rx="3"></rect><rect x="270" y="17" width="6" height="46" rx="3"></rect><rect x="280" y="6" width="6" height="68" rx="3"></rect><rect x="290" y="14" width="6" height="52" rx="3"></rect><rect x="300" y="21" width="6" height="38" rx="3"></rect><rect x="310" y="26" width="6" height="28" rx="3"></rect><rect x="320" y="11" width="6" height="58" rx="3"></rect><rect x="330" y="18" width="6" height="44" rx="3"></rect><rect x="340" y="24" width="6" height="32" rx="3"></rect><rect x="350" y="10" width="6" height="60" rx="3"></rect><rect x="360" y="16" width="6" height="48" rx="3"></rect><rect x="370" y="27" width="6" height="26" rx="3"></rect><rect x="380" y="20" width="6" height="40" rx="3"></rect><rect x="390" y="29" width="6" height="22" rx="3"></rect></svg>
+
+</div>
+<div style="padding: 22px 24px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 28px;">Music</h3><p style="margin: 0; font-size: 16px; color: #4A5568;">Make music from a description.</p></div>
+</article>
+<article style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid #E3E7EE; display: flex; flex-direction: column;">
+<div class="mono" style="aspect-ratio: 16 / 10; background: #0B1526; display: flex; flex-direction: column; font-size: 13px; color: #B9C4D4; box-sizing: border-box;"><div style="display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid rgba(185,196,212,.12);"><span style="padding: 3px 10px; border-radius: 6px; background: #152238; color: #FFFFFF;">app.py</span><span style="padding: 3px 10px;">model.py</span><span style="padding: 3px 10px;">README.md</span></div><div style="flex: 1; display: flex; min-height: 0;"><div style="width: 30%; padding: 12px; border-right: 1px solid rgba(185,196,212,.12); line-height: 1.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><div>▾ my-project</div><div style="padding-left: 12px;">app.py</div><div style="padding-left: 12px;">model.py</div><div style="padding-left: 12px;">requirements.txt</div></div><div style="flex: 1; padding: 12px 14px; line-height: 1.75; white-space: nowrap; overflow: hidden;"><div><span style="color: #C792EA;">import</span> gradio <span style="color: #C792EA;">as</span> gr</div><div><span style="color: #C792EA;">from</span> model <span style="color: #C792EA;">import</span> generate</div><div>&nbsp;</div><div>demo = gr.Interface(generate, <span style="color: #F2C46D;">"text"</span>, <span style="color: #F2C46D;">"image"</span>)</div><div>demo.launch()</div></div></div><div style="padding: 8px 12px; border-top: 1px solid rgba(185,196,212,.12); color: #5FD3C4;">● Your app is running</div></div>
+<div style="padding: 22px 24px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 28px;">AI Dev</h3><p style="margin: 0; font-size: 16px; color: #4A5568;">Build and run your own project.</p><p style="margin: 0; font-size: 14px; color: #8A97AB;">A code editor and a terminal in your browser.</p></div>
+</article>
+<article style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid #E3E7EE; display: flex; flex-direction: column;">
+<div style="aspect-ratio: 16 / 10; background: #152238; display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; box-sizing: border-box; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #B9C4D4;"><div style="padding: 8px 10px; border-radius: 8px; background: #0B1526;"><span style="color: #5FD3C4;">[3]</span> model.fit(my_images, epochs=10)</div><div style="flex: 1; min-height: 0; padding: 8px 10px; border-radius: 8px; background: #0B1526; display: flex; flex-direction: column;"><span style="font-size: 12px;">loss</span><svg viewBox="0 0 300 100" preserveAspectRatio="none" style="flex: 1; width: 100%;" aria-hidden="true"><polyline fill="none" stroke="#5FD3C4" stroke-width="2.5" points="0,8 30,30 60,46 90,58 120,66 150,72 180,77 210,80 240,82 270,84 300,85"></polyline><line x1="0" y1="99" x2="300" y2="99" stroke="rgba(185,196,212,.3)"></line></svg><span style="font-size: 12px; color: #FFFFFF;">epoch 10 of 10 · done</span></div></div>
+<div style="padding: 22px 24px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 28px;">Notebook</h3><p style="margin: 0; font-size: 16px; color: #4A5568;">Train a model of your own.</p><p style="margin: 0; font-size: 14px; color: #8A97AB;">Notebooks, cell by cell, on a GPU.</p></div>
+</article>
+<article style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid #E3E7EE; display: flex; flex-direction: column;">
+<div class="mono" style="aspect-ratio: 16 / 10; background: #000000; color: #B9C4D4; padding: 18px 20px; box-sizing: border-box; font-size: 13px; line-height: 1.85; display: flex; flex-direction: column; justify-content: center;"><span><span style="color: #5FD3C4;">~ $</span> gpu-status</span><span>GPU 0 &nbsp;utilisation <span style="color: #5FD3C4;">████████████░</span> 94%</span><span>&nbsp; &nbsp; &nbsp; temperature 68°C &nbsp; fans ok</span><span><span style="color: #5FD3C4;">~ $</span> ./train.sh --resume</span><span style="color: #FFFFFF;">resumed from your last pause</span></div>
+<div style="padding: 22px 24px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 28px;">Raw GPU</h3><p style="margin: 0; font-size: 16px; color: #4A5568;">Run anything you like on a bare GPU.</p><p style="margin: 0; font-size: 14px; color: #8A97AB;">A terminal with the whole card to yourself.</p></div>
+</article>
+</div>
+</div>
+</section>
+
+<section style="position: relative; background: radial-gradient(1200px 520px at 50% 0%, rgba(95,211,196,.14), rgba(11,21,38,0) 60%), #0B1526; color: #FFFFFF; overflow: hidden;">
+<div style="max-width: 1240px; margin: 0 auto; padding: 112px 28px; display: flex; flex-direction: column; gap: 56px;">
+<div style="display: flex; flex-wrap: wrap; gap: 24px 96px; align-items: flex-end; justify-content: space-between;"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 800; font-size: clamp(38px, 4.6vw, 68px); line-height: 1.0; letter-spacing: -0.03em; max-width: 14ch;">Bring your assistant. Bring your tools.</h2><p style="margin: 0; flex: 0 1 420px; font-size: 18px; line-height: 1.6; color: #B9C4D4;">Ask in plain words and your studio does the work. Or drive it from the agent you already use.</p></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 24px;"><article style="border-radius: 20px; background: #152238; border: 1px solid rgba(185,196,212,.18); padding: 28px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.35);"><div style="display: flex; align-items: center; justify-content: space-between;"><h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 24px;">The studio assistant</h3><span style="font-size: 13px; color: #5FD3C4;">● Video studio</span></div><span style="align-self: flex-end; max-width: 80%; padding: 10px 14px; border-radius: 14px 14px 4px 14px; background: #5FD3C4; color: #0B1526; font-size: 15px; font-weight: 500;">Make my whale clip vertical for a phone.</span><div style="align-self: flex-start; max-width: 88%; padding: 12px 14px; border-radius: 14px 14px 14px 4px; background: #0B1526; font-size: 15px; color: #FFFFFF; display: flex; gap: 12px; align-items: center;"><img src="assets/media/R1_z-image-turbo_16x9_s206941868.jpg" alt="" style="width: 54px; height: 96px; object-fit: cover; border-radius: 8px; display: block; flex: 0 0 auto;"><span>Ready to reframe it to 9:16 and save a new copy beside the original. Run it?</span></div><div style="display: flex; gap: 8px; align-self: flex-start;"><span style="padding: 8px 14px; border-radius: 10px; background: #FFFFFF; color: #0B1526; font-size: 14px; font-weight: 600;">Run</span><span style="padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(185,196,212,.35); font-size: 14px;">Not now</span></div><p style="margin: 4px 0 0; font-size: 14px; line-height: 1.6; color: #B9C4D4;">Bring your own key when a tool needs a third party. That provider bills you under its own terms. Tools that run on your card use only your plan hours.</p></article><article style="border-radius: 20px; background: #152238; border: 1px solid rgba(185,196,212,.18); padding: 28px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.35);"><h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 24px;">Drive it from your agent</h3><div class="mono" style="flex: 1; padding: 16px 18px; border-radius: 12px; background: #0B1526; font-size: 13.5px; line-height: 1.9; color: #B9C4D4; overflow: hidden;"><div><span style="color: #5FD3C4;">$</span> claude mcp add meterless https://app.meterless.com/mcp</div><div style="color: #FFFFFF;">&gt; Open my Image studio and run the upscale on today&#39;s renders.</div><div><span style="color: #5FD3C4;">✓</span> open_studio("image") &nbsp;<span style="color: #8A97AB;">running</span></div><div><span style="color: #5FD3C4;">✓</span> run_workflow("upscale", 12 files)</div><div><span style="color: #5FD3C4;">✓</span> pause() &nbsp;<span style="color: #8A97AB;">· hours stopped · work saved</span></div></div><p style="margin: 0; font-size: 14px; line-height: 1.6; color: #B9C4D4;">Check your hours. Open a studio. Pause it when the job is done.</p></article></div>
+<div class="hub" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 28px; align-items: center;"><div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;"><span style="font-size: 13px; color: #8A97AB; letter-spacing: .04em;">YOUR ASSISTANT</span><div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px;"><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">Claude</span><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">OpenAI</span><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">Grok</span></div></div><div style="position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center;"><div style="position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(95,211,196,.35); box-shadow: 0 0 60px rgba(95,211,196,.25);"></div><div style="position: absolute; left: -28px; right: -28px; top: 50%; height: 1px; background: linear-gradient(90deg, rgba(95,211,196,0), rgba(95,211,196,.6), rgba(95,211,196,0));"></div><img src="assets/media/meterless_avatar_x_800.png" alt="meterless" style="position: relative; width: 84px; height: 84px; border-radius: 50%; display: block;"></div><div style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;"><span style="font-size: 13px; color: #8A97AB; letter-spacing: .04em;">YOUR TOOLS</span><div style="display: flex; flex-wrap: wrap; gap: 8px;"><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">Claude Code</span><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">Cursor</span><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">GitHub</span><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">GitLab</span><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">Hugging Face</span><span style="padding: 8px 14px; border-radius: 999px; background: rgba(21,34,56,.9); border: 1px solid rgba(95,211,196,.35); font-size: 14px; color: #FFFFFF; white-space: nowrap;">Any MCP client</span></div></div></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;"><p style="margin: 0; font-size: 17px; line-height: 1.6; color: #FFFFFF; max-width: 60ch;">Connect a third-party tool with your own account and key. That provider bills you under its own terms. We do not mark it up.</p><p style="margin: 0; font-size: 14px; color: #5FD3C4;">Your key. Their terms. Their bill.</p><p style="margin: 6px 0 0; font-size: 13px; color: #8A97AB;">Names are used only to say what connects.</p></div>
+</div>
+</section>
+
+<section id="pause" style="background: #FFFFFF;">
+<div style="max-width: 1240px; margin: 0 auto; padding: 112px 28px; display: flex; flex-direction: column; gap: 52px;">
+<div style="display: flex; flex-wrap: wrap; gap: 24px 96px; align-items: flex-end; justify-content: space-between;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 800; font-size: clamp(38px, 4.6vw, 68px); line-height: 1.0; letter-spacing: -0.03em;">How pause works</h2>
+<div style="flex: 0 1 460px; display: flex; flex-direction: column; gap: 12px;"><p style="margin: 0; font-size: 18px; line-height: 1.6; color: #4A5568;">You open a studio. You work. When you need to step away, you pause.</p><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #4A5568;">Studios start warm. If a studio ever has to start cold, you are told, and the wait is given back to you in hours.</p><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #4A5568;">Built for a desk. Your phone is for checking, pausing and picking up results.</p></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 28px; align-items: start;">
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 16px;"><div style="display: flex; align-items: center; gap: 12px;"><span style="width: 14px; height: 14px; border-radius: 50%; background: #0F8C7E; display: block; flex: 0 0 auto;"></span><span style="height: 1px; flex: 1 1 auto; background: #B9C4D4;"></span></div><div style="border-radius: 16px; overflow: hidden; background: #0B1526; aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; box-shadow: 0 18px 50px rgba(21,34,56,.16);"><img src="assets/media/running_desk_crop.png" alt="The meterless dashboard: Image Studio, Running. Hours are counting. Your work is where you left it." style="max-width: 92%; max-height: 88%; object-fit: contain; display: block; border-radius: 8px;"></div><figcaption style="display: flex; flex-direction: column; gap: 6px;"><span style="font-weight: 600; font-size: 17px;">Running</span><span style="font-size: 16px; line-height: 1.55; color: #4A5568;">Hours count only while a studio is running.</span></figcaption></figure>
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 16px;"><div style="display: flex; align-items: center; gap: 12px;"><span style="width: 14px; height: 14px; box-sizing: border-box; border: 2.5px solid #0F8C7E; border-radius: 50%; display: block; flex: 0 0 auto;"></span><span style="height: 1px; flex: 1 1 auto; background: #B9C4D4;"></span></div><div style="border-radius: 16px; overflow: hidden; background: #0B1526; aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; box-shadow: 0 18px 50px rgba(21,34,56,.16);"><img src="assets/media/receipt_crop.png" alt="The meterless pause screen: Parked. Hours stopped. Stopped at 0 h, saved 9 files, Open again." style="max-width: 92%; max-height: 88%; object-fit: contain; display: block; border-radius: 8px;"></div><figcaption style="display: flex; flex-direction: column; gap: 6px;"><span style="font-weight: 600; font-size: 17px;">Paused. Hours stop.</span><span style="font-size: 16px; line-height: 1.55; color: #4A5568;">Your work is saved exactly as you left it.</span></figcaption></figure>
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 16px;"><div style="display: flex; align-items: center; gap: 12px;"><span style="width: 14px; height: 14px; border-radius: 50%; background: #0F8C7E; display: block; flex: 0 0 auto;"></span><span style="height: 1px; flex: 1 1 auto; background: linear-gradient(90deg,#B9C4D4,rgba(185,196,212,0));"></span></div><div style="border-radius: 16px; overflow: hidden; background: #0B1526; aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; box-shadow: 0 18px 50px rgba(21,34,56,.16);"><img src="assets/media/parked_crop.png" alt="A parked meterless Image studio: Stopped at 0 h. Everything is exactly as you left it. Open again." style="max-width: 92%; max-height: 88%; object-fit: contain; display: block; border-radius: 8px;"></div><figcaption style="display: flex; flex-direction: column; gap: 6px;"><span style="font-weight: 600; font-size: 17px;">Open again</span><span style="font-size: 16px; line-height: 1.55; color: #4A5568;">Files, setup and progress stay put. You pick up where you left off.</span></figcaption></figure>
+</div>
+</div>
+</section>
+
+
+<section id="join" style="position: relative; background: #0B1526; color: #FFFFFF; overflow: hidden;">
+<div aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: .5;">
+<div class="wall" style="left: -10%; right: -10%;">
+<div class="col" style="animation-play-state: paused;"><img src="assets/media/R1_z-image-turbo_1x1_s1888694398.jpg" alt=""><img src="assets/media/GEN-W1-1x1-4.jpg" alt=""><img src="assets/media/Li_z-image-turbo_4x5_s541717484.jpg" alt=""></div>
+<div class="col c2" style="animation-play-state: paused;"><img src="assets/media/r5_poster.jpg" alt=""><img src="assets/media/GEN-W1-1x1-2.jpg" alt=""><img src="assets/media/Lk_z-image-turbo_4x5_s661337207.jpg" alt=""></div>
+<div class="col c3" style="animation-play-state: paused;"><img src="assets/media/GEN-W1-1x1-1.jpg" alt=""><img src="assets/media/R1_z-image-turbo_16x9_s422545787.jpg" alt=""><img src="assets/media/p6c_poster.jpg" alt=""></div>
+<div class="col c4" style="animation-play-state: paused;"><img src="assets/media/GEN-W1-1x1-3.jpg" alt=""><img src="assets/media/La_z-image-turbo_4x5_s2127781645.jpg" alt=""><img src="assets/media/R1_z-image-turbo_16x9_s206941868.jpg" alt=""></div>
+</div>
+<div style="position: absolute; inset: 0; background: rgba(11,21,38,.86);"></div>
+</div>
+<div style="position: relative; max-width: 880px; margin: 0 auto; padding: 136px 28px; display: flex; flex-direction: column; align-items: center; gap: 28px; text-align: center;">
+<span style="width: 20px; height: 20px; box-sizing: border-box; border: 3px solid #5FD3C4; border-radius: 50%; display: block;"></span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 800; font-size: clamp(42px, 5.6vw, 84px); line-height: 0.96; letter-spacing: -0.03em;">The founding cohort</h2>
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #B9C4D4; max-width: 46ch;">Launching autumn 2026. The founding cohort is by invitation from the waitlist. Founding members keep their launch price for 12 months while their plan stays paid.</p>
+<form method="post" action="https://app.meterless.com/waitlist" style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%; max-width: 560px; padding: 8px; border-radius: 16px; background: rgba(21,34,56,.9); border: 1px solid rgba(185,196,212,.2);">
+<label for="e1b" class="sr">Email address</label>
+<input name="email" required autocomplete="email" inputmode="email" id="e1b" type="email" placeholder="you@example.com" style="flex: 1 1 220px; min-width: 0; height: 52px; box-sizing: border-box; padding: 0 16px; border: 0; border-radius: 10px; background: transparent; color: #FFFFFF; font: 400 17px Inter, sans-serif;">
+<button class="btn" type="submit" style="height: 52px; padding: 0 24px; border: 0; border-radius: 10px; background: #5FD3C4; color: #0B1526; font: 600 17px Inter, sans-serif; cursor: pointer;">Join the waitlist</button>
+</form>
+<a href="/privacy" style="font-size: 13px; color: #B9C4D4; text-decoration: underline;">Privacy Notice</a>
+</div>
+<div style="position: relative; max-width: 1240px; margin: 0 auto; padding: 28px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; font-size: 14px; color: #B9C4D4; border-top: 1px solid rgba(185,196,212,.15);">
+<img src="assets/media/meterless_wordmark_white_1200.png" alt="meterless" style="width: 112px; height: auto; display: block;">
+<span style="display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center;"><a href="/privacy" style="color: #B9C4D4;">Privacy</a><a href="/cookies" style="color: #B9C4D4;">Cookies</a><span>© 2026 Meterless Limited. <a href="mailto:support@meterless.com" style="color: #5FD3C4;">support@meterless.com</a></span></span>
+</div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var items = [
+{ kind: "video", studio: "Video studio · Wan 2.2 · unedited", prompt: "A colossal whale made of clear liquid glass swims slowly through golden clouds above a vast desert at sunset, sunlight refracting through its body, cinematic tracking shot, epic scale.", src: "assets/media/R1_wan22-t2v-a14b_s1698356521.mp4", poster: "assets/media/R1_z-image-turbo_16x9_s206941868.jpg", alt: "A whale made of clear glass swimming through golden clouds above a desert at sunset, made on the meterless Video studio" },
+{ kind: "video", studio: "Video studio · Wan 2.2 · unedited", prompt: "Extreme slow motion, a hummingbird made of molten copper hovers beside a glowing flower, sparks drifting through the air, dark background, macro.", src: "assets/media/r4_web.mp4", poster: "assets/media/r4_poster.jpg", alt: "A copper hummingbird hovering beside a glowing flower with sparks drifting, made on the meterless Video studio" },
+{ kind: "video", studio: "Video studio · Wan 2.2 · unedited", prompt: "Enormous turquoise waves roll in and crash against white chalk cliffs on a bright summer morning, sunlight sparkling on the water, slow aerial tracking shot, cinematic.", src: "assets/media/p6c_web.mp4", poster: "assets/media/p6c_poster.jpg", alt: "Turquoise waves crashing against white chalk cliffs on a bright summer morning, made on the meterless Video studio" },
+{ kind: "video", studio: "Video studio · Wan 2.2 · unedited", prompt: "A black horse gallops through shallow water at dawn, and each splash of water transforms into a flock of white birds taking flight, slow motion, cinematic.", src: "assets/media/r5_web.mp4", poster: "assets/media/r5_poster.jpg", alt: "A black horse galloping through shallow water at dawn as white birds rise, made on the meterless Video studio" },
+{ kind: "image", studio: "Image studio · Z-Image-Turbo · unedited", prompt: "Macro photograph of ink blooming in water, deep navy and teal, studio lighting, black background.", src: "assets/media/GEN-W1-1x1-1.jpg", poster: "", alt: "Ink blooming in water, deep navy and teal, made on the meterless Image studio" }
+];
+  var reel = document.getElementById('reel');
+  var stRun = document.getElementById('st-run'), stPause = document.getElementById('st-pause');
+  var bNext = document.getElementById('btn-next'), bToggle = document.getElementById('btn-toggle');
+  var idx = 0, paused = false, timer = null, media = null;
+  var NOISE = '<svg width="100%" height="100%" style="display:block" aria-hidden="true"><filter id="n1"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#n1)"></rect></svg>';
+  function el(tag, attrs, html){ var e = document.createElement(tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (html != null) e.innerHTML = html; return e; }
+  function render(){
+    var it = items[idx];
+    reel.innerHTML = '';
+    var wrap = el('div', {style:'display:flex;flex-direction:column'});
+    var line = el('div', {style:'padding:18px 20px;min-height:84px;font-size:17px;line-height:1.5;color:#FFFFFF;border-bottom:1px solid rgba(185,196,212,.16)'});
+    var words = it.prompt.split(' ');
+    words.forEach(function(t, j){ var w = el('span', {'class':'w', style:'animation-delay:' + (j*0.06).toFixed(2) + 's'}); w.textContent = t; line.appendChild(w); });
+    line.appendChild(el('span', {'class':'caret'}));
+    var delay = (words.length*0.06 + 0.3).toFixed(2) + 's';
+    var box = el('div', {style:'position:relative;aspect-ratio:16/10;overflow:hidden;background:#000000'});
+    if (it.kind === 'video') {
+      media = el('video', {'class':'resolve', src:it.src, poster:it.poster, 'aria-label':it.alt, style:'width:100%;height:100%;object-fit:cover;display:block;animation-delay:' + delay});
+      media.muted = true; media.loop = true; media.autoplay = true; media.setAttribute('playsinline', ''); media.setAttribute('muted', '');
+    } else {
+      media = el('img', {'class':'resolve', src:it.src, alt:it.alt, style:'width:100%;height:100%;object-fit:cover;display:block;animation-delay:' + delay});
+    }
+    box.appendChild(media);
+    box.appendChild(el('div', {'class':'noise', style:'position:absolute;inset:0;animation-delay:' + delay}, NOISE));
+    var chip = el('span', {style:'position:absolute;left:14px;bottom:14px;padding:6px 12px;border-radius:999px;background:rgba(11,21,38,.82);font-size:13px;color:#FFFFFF'});
+    chip.textContent = it.studio; box.appendChild(chip);
+    wrap.appendChild(line); wrap.appendChild(box); reel.appendChild(wrap);
+    if (media.tagName === 'VIDEO' && !paused) { var p = media.play(); if (p && p.catch) p.catch(function(){}); }
+  }
+  function setPaused(v){
+    paused = v;
+    document.body.classList.toggle('paused', v);
+    stRun.hidden = v; stPause.hidden = !v;
+    bToggle.textContent = v ? 'Open again' : 'Pause';
+    bToggle.setAttribute('aria-pressed', v ? 'true' : 'false');
+    if (media && media.tagName === 'VIDEO') { if (v) media.pause(); else { var p = media.play(); if (p && p.catch) p.catch(function(){}); } }
+  }
+  function tick(){ if (!paused) { idx = (idx + 1) % items.length; render(); } }
+  bNext.addEventListener('click', function(){ idx = (idx + 1) % items.length; setPaused(false); render(); clearInterval(timer); timer = setInterval(tick, 10000); });
+  bToggle.addEventListener('click', function(){ setPaused(!paused); });
+  render();
+  timer = setInterval(tick, 10000);
+})();
+</script>
 </body>
 </html>
