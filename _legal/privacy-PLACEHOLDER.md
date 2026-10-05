@@ -1,8 +1,8 @@
 # Privacy Notice (PLACEHOLDER)
 
-PLACEHOLDER-NOT-FOR-PUBLISH. This file stands in for `privacy-v1.2-2026-10-07.md`, which the PM
+PLACEHOLDER-NOT-FOR-PUBLISH. This file stands in for `privacy-v1.3-2026-10-07.md`, which the PM
 supplies in tonight's pack. It exists only so the build, the gate and the QA harness can be run
-before the pack lands. Its sha256 does not match the ruled prefix, so the real build refuses it.
+before the pack lands. Its sha256 does not equal the ruled full sha256, so the real build refuses it.
 
 ## Exercising the converter
 

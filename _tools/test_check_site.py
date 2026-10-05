@@ -78,8 +78,8 @@ def site(tmp_path):
     (s / "CNAME").write_text("meterless.com\n")
     (s / "_legal" / "privacy-test.md").write_bytes(PRIVACY_MD)
     (s / "_legal" / "cookies-test.md").write_bytes(COOKIES_MD)
-    pins = {"privacy": ("privacy-test.md", hashlib.sha256(PRIVACY_MD).hexdigest()[:12]),
-            "cookies": ("cookies-test.md", hashlib.sha256(COOKIES_MD).hexdigest()[:12])}
+    pins = {"privacy": ("privacy-test.md", hashlib.sha256(PRIVACY_MD).hexdigest()),
+            "cookies": ("cookies-test.md", hashlib.sha256(COOKIES_MD).hexdigest())}
     build_legal_pages.build(s, pins=pins)
     return s, pins
 
@@ -179,7 +179,7 @@ def test_NEGATIVE_CONTROL_an_edited_privacy_source_goes_red(site):
     s, _ = site
     p = s / "_legal" / "privacy-test.md"
     p.write_bytes(p.read_bytes().replace(b"tell you", b"tell  you"))   # one byte
-    assert any("sha256" in r["detail"] for r in _reds(site, "legal"))
+    assert any("ruled" in r["detail"] for r in _reds(site, "legal"))
 
 
 def test_NEGATIVE_CONTROL_the_build_refuses_an_edited_source_and_writes_nothing(site):
@@ -262,12 +262,39 @@ def test_NEGATIVE_CONTROL_a_form_that_no_longer_posts_to_the_waitlist_goes_red(s
 
 
 # ── the record ─────────────────────────────────────────────────────────────────────────────────
-def test_the_pins_are_the_ruled_prefixes():
-    """Ruling 553 (revised 2). A change here is a change to what the apex may serve."""
+def test_the_pins_are_the_ruled_full_digests():
+    """Ruling 554 (re-pins 553): full sha256, privacy is v1.3. A change here changes what the apex may serve."""
     assert legal_pins.PINS == {
-        "privacy": ("privacy-v1.2-2026-10-07.md", "d5b800e0fcf6"),
-        "cookies": ("cookies-v1.2-2026-10-07.md", "1b7a8cdfffa3"),
+        "privacy": ("privacy-v1.3-2026-10-07.md",
+                    "e3c2c56737828eb7a3ca74763d139ed634df38290b47cc4b47167f46698faf51"),
+        "cookies": ("cookies-v1.2-2026-10-07.md",
+                    "1b7a8cdfffa35df000e551e168e870885b3f92f197ff00a9de8055f2654de433"),
     }
+
+
+def test_NEGATIVE_CONTROL_a_source_matching_only_the_prefix_is_refused(site, tmp_path):
+    """A pin is the full digest: a file whose digest shares the first 12 hex but differs after is
+    refused. Simulated by pinning the right first 12 and a wrong tail."""
+    s, pins = site
+    real = pins["privacy"][1]
+    tail = "0" * 52 if real[12:] != "0" * 52 else "1" * 52
+    wrong = dict(pins, privacy=(pins["privacy"][0], real[:12] + tail))
+    reds, _ = check_site.check(s, pins=wrong)
+    assert any(r["check"] == "legal" and "privacy" in r["file"] for r in reds)
+    with pytest.raises(build_legal_pages.PinRefused):
+        build_legal_pages.build(s, pins=wrong)
+
+
+def test_NEGATIVE_CONTROL_a_shortened_pin_refuses_at_import(tmp_path):
+    """Planting a 12-hex prefix in legal_pins.py must stop the module loading at all."""
+    import importlib.util
+    src = (HERE / "legal_pins.py").read_text().replace(
+        legal_pins.PINS["cookies"][1], legal_pins.PINS["cookies"][1][:12])
+    planted = tmp_path / "legal_pins_planted.py"
+    planted.write_text(src)
+    spec = importlib.util.spec_from_file_location("legal_pins_planted", planted)
+    with pytest.raises(SystemExit):
+        spec.loader.exec_module(importlib.util.module_from_spec(spec))
 
 
 def test_the_real_tree_has_no_red_outside_the_pending_pack():

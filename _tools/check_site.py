@@ -13,7 +13,7 @@ Checks, each with a negative control in `test_check_site.py`:
   cookies      no script touches document.cookie or cookieStore; no <meta http-equiv=set-cookie>.
   terms        no /terms page is published and nothing links to one.
   legal        /privacy and /cookies are byte-for-byte what `build_legal_pages.py` makes from the
-               pinned source, whose sha256 must start with the ruled prefix; every word of the
+               pinned source, whose sha256 must EQUAL the ruled full digest; every word of the
                source appears, in order, on the page.
   placeholder  no published file carries the placeholder marker.
   markdown     no .md file is published (GitHub Pages would render it as a route of its own).
@@ -208,7 +208,7 @@ def check(site=SITE, pins=None):
             red("terms", rel, "a /terms page is published")
 
     # legal pages
-    for route, (name, prefix) in sorted(pins.items()):
+    for route, (name, pinned) in sorted(pins.items()):
         src = site / "_legal" / name
         page = site / route / "index.html"
         if not src.is_file():
@@ -216,8 +216,8 @@ def check(site=SITE, pins=None):
             continue
         data = src.read_bytes()
         digest = hashlib.sha256(data).hexdigest()
-        if not digest.startswith(prefix):
-            red("legal", f"_legal/{name}", f"sha256 starts {digest[:12]}, ruled {prefix}")
+        if digest != pinned:
+            red("legal", f"_legal/{name}", f"sha256 {digest}, ruled {pinned}")
             continue
         if not page.is_file():
             red("legal", f"{route}/index.html", "page missing")

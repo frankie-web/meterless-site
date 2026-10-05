@@ -5,7 +5,7 @@
     python3 _tools/build_legal_pages.py --placeholder # pre-pack scaffold: builds from *-PLACEHOLDER.md
 
 FAILS CLOSED. The real build writes nothing unless EVERY pinned source exists and its sha256 starts
-with the ruled prefix (`legal_pins.PINS`). A placeholder build stamps every page with
+EQUALS the ruled full digest (`legal_pins.PINS`). A placeholder build stamps every page with
 `legal_pins.PLACEHOLDER_MARKER`, which `check_site.py` refuses, so it can never pass the gate.
 Local files only: no git, no network.
 """
@@ -31,15 +31,15 @@ def verify(site, pins=None):
     """{route: (path, bytes)} for every pinned source, or raise PinRefused naming every failure."""
     pins = pins or legal_pins.PINS
     found, problems = {}, []
-    for route, (name, prefix) in sorted(pins.items()):
+    for route, (name, pinned) in sorted(pins.items()):
         path = pathlib.Path(site) / "_legal" / name
         if not path.is_file():
             problems.append(f"{route}: {path.relative_to(site)} is missing")
             continue
         data = path.read_bytes()
         digest = hashlib.sha256(data).hexdigest()
-        if not digest.startswith(prefix):
-            problems.append(f"{route}: {name} sha256 starts {digest[:12]}, the ruling requires {prefix}")
+        if digest != pinned:
+            problems.append(f"{route}: {name} sha256 is {digest}, the ruling requires {pinned}")
             continue
         found[route] = (path, data)
     if problems:
@@ -76,7 +76,7 @@ def main(argv=None):
     ap.add_argument("--site", default=str(SITE))
     a = ap.parse_args(argv)
     for out, size, digest in build(a.site, placeholder=a.placeholder):
-        print(f"wrote {out.relative_to(a.site)}  {size} bytes  from sha256 {digest[:12]}")
+        print(f"wrote {out.relative_to(a.site)}  {size} bytes  from sha256 {digest}")
     return 0
 
 
