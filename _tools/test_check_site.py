@@ -302,3 +302,58 @@ def test_the_real_tree_has_no_red_outside_the_pending_pack():
     sources. After it lands, nothing is allowed; this test then holds trivially."""
     reds, _info = check_site.check(REAL)
     assert [r for r in reds if r["check"] not in ("placeholder", "legal")] == []
+
+
+# ── unsupported markdown: FAIL CLOSED (ruling 553 Q7) ──────────────────────────────────────────
+REFUSED_CONSTRUCTS = [
+    ("raw HTML", "<div class=\"note\">A boxed note.</div>"),
+    ("raw HTML", "Some text with an inline <br> break."),
+    ("raw HTML", "<details><summary>More</summary></details>"),
+    ("HTML comment", "<!-- drafting note -->"),
+    ("image", "![The office](/assets/office.png)"),
+    ("image", "![Logo][logo]\n\n[logo]: /assets/logo.png"),
+    ("footnote", "A claim that needs a source.[^1]"),
+    ("footnote", "[^1]: The source."),
+    ("HTML entity", "Fees&nbsp;apply."),
+    ("HTML entity", "Section&#160;4."),
+    ("reference link with no definition", "See [the regulator][ico]."),
+    ("pipe-table row outside a well-formed table", "| a | b |\n| c | d |"),
+    ("unclosed code fence", "```\nnever closed"),
+]
+
+
+def _plant_source(site_and_pins, extra):
+    s, pins = site_and_pins
+    data = PRIVACY_MD + b"\n" + extra.encode() + b"\n"
+    (s / "_legal" / "privacy-test.md").write_bytes(data)
+    pins = dict(pins, privacy=("privacy-test.md", hashlib.sha256(data).hexdigest()))
+    return s, pins, data
+
+
+@pytest.mark.parametrize("construct,line", REFUSED_CONSTRUCTS)
+def test_NEGATIVE_CONTROL_an_unsupported_construct_refuses_the_build_and_names_it(site, construct, line):
+    s, pins, data = _plant_source(site, line)        # re-pinned, so the CONSTRUCT is the only cause
+    before = (s / "privacy" / "index.html").read_bytes()
+    with pytest.raises(build_legal_pages.ConstructRefused) as refused:
+        build_legal_pages.build(s, pins=pins)
+    text = str(refused.value)
+    assert construct in text and "privacy-test.md line " in text, text
+    planted_line = data.decode().split("\n").index(line.split("\n")[0]) + 1
+    assert f"line {planted_line}:" in text or construct == "unclosed code fence", text
+    assert (s / "privacy" / "index.html").read_bytes() == before, "a refused build wrote a page"
+    reds, _ = check_site.check(s, pins=pins)
+    assert any(r["check"] == "legal" and "unsupported markdown" in r["detail"] for r in reds)
+
+
+@pytest.mark.parametrize("line", [
+    "Use `<div>` in a code span.",
+    "```\n<div>fenced code is literal by design</div>\n```",
+    "Terms & Conditions, and A&B.",
+    "Write to <support@meterless.com> or see <https://example.org/a>.",
+    "A [defined reference][ico].\n\n[ico]: https://example.org/ico",
+    "Compare 3 < 4 and 5 > 2.",
+])
+def test_supported_text_that_LOOKS_like_markup_still_builds(site, line):
+    s, pins, _data = _plant_source(site, line)
+    build_legal_pages.build(s, pins=pins)
+    assert check_site.check(s, pins=pins)[0] == []

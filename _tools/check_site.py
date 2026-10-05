@@ -13,7 +13,8 @@ Checks, each with a negative control in `test_check_site.py`:
   cookies      no script touches document.cookie or cookieStore; no <meta http-equiv=set-cookie>.
   terms        no /terms page is published and nothing links to one.
   legal        /privacy and /cookies are byte-for-byte what `build_legal_pages.py` makes from the
-               pinned source, whose sha256 must EQUAL the ruled full digest; every word of the
+               pinned source, whose sha256 must EQUAL the ruled full digest
+               and which uses no construct the converter refuses; every word of the
                source appears, in order, on the page.
   placeholder  no published file carries the placeholder marker.
   markdown     no .md file is published (GitHub Pages would render it as a route of its own).
@@ -218,6 +219,10 @@ def check(site=SITE, pins=None):
         digest = hashlib.sha256(data).hexdigest()
         if digest != pinned:
             red("legal", f"_legal/{name}", f"sha256 {digest}, ruled {pinned}")
+            continue
+        bad = mdpage.warnings(data)
+        if bad:
+            red("legal", f"_legal/{name}", "unsupported markdown (fail closed): " + "; ".join(bad[:5]))
             continue
         if not page.is_file():
             red("legal", f"{route}/index.html", "page missing")

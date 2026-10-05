@@ -3,8 +3,9 @@ the same bytes out, so `check_site.py` can rebuild a page and compare it byte fo
 
 Supported: ATX and setext headings, paragraphs, hard breaks, bullet and numbered lists (nested by
 indentation), block quotes, horizontal rules, fenced code, pipe tables, inline code, bold, italic,
-inline links, reference links and autolinks. Anything else is kept as literal text (escaped), and
-`warnings()` names it so a human reads it before the page ships. Words are never dropped:
+inline links, reference links and autolinks. Anything else is REFUSED (ruling 553, Q7: fail
+closed): `unsupported()` names each construct and its line, and the build writes nothing, because raw
+markup must never appear as text on a page published unedited. Words are never dropped:
 `check_site.py` compares the word sequence of the source with the word sequence of the page.
 """
 import hashlib
@@ -20,7 +21,6 @@ _LIST = re.compile(r"^(\s*)([-*+]|\d+[.)])\s+(.*)$")
 _QUOTE = re.compile(r"^\s*>\s?(.*)$")
 _TABLE_SEP = re.compile(r"^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$")
 _REF_DEF = re.compile(r"^\s{0,3}\[([^\]]+)\]:\s*<?(\S+?)>?(?:\s+[\"'(].*[\"')])?\s*$")
-_RAW_HTML = re.compile(r"^\s*<[A-Za-z/!]")
 
 
 def _slug(text, used):
@@ -201,12 +201,6 @@ def convert(md_text):
             flush_para()
             i = _list(kept, i, out, inline)
             continue
-        if _RAW_HTML.match(ln):
-            warns.append(f"line {i + 1}: raw HTML kept as literal text: {ln.strip()[:60]}")
-        if re.search(r"!\[[^\]]*\]\(", ln):
-            warns.append(f"line {i + 1}: image syntax kept as literal text (no image is served)")
-        if re.search(r"\[\^[^\]]+\]", ln):
-            warns.append(f"line {i + 1}: footnote syntax kept as literal text")
         para.append(ln)
         i += 1
     flush_para()
@@ -334,8 +328,67 @@ def render_page(md_bytes, source_name, placeholder_marker=None):
     return page.encode("utf-8")
 
 
+_INLINE_TAG = re.compile(r"</?[A-Za-z][A-Za-z0-9-]*(?:\s[^<>]*)?/?>")
+_COMMENT = re.compile(r"<!--|-->")
+_IMAGE = re.compile(r"!\[[^\]]*\]\s*[(\[]")
+_FOOTNOTE = re.compile(r"\[\^[^\]]*\]")
+_ENTITY = re.compile(r"&(?:[A-Za-z][A-Za-z0-9]*|#[0-9]+|#[xX][0-9A-Fa-f]+);")
+_REF_USE = re.compile(r"\[([^\]]+)\]\[([^\]]*)\]")
+_CODE_SPAN = re.compile(r"(`+)(.+?)\1")
+
+
+def unsupported(md_text):
+    """[(line_number, construct, excerpt)] for every construct this converter does not render.
+
+    Empty means the page shows the source's words and nothing else. Code spans and fenced code are
+    literal BY DESIGN in markdown, so they are not scanned; everything else is.
+    """
+    lines = md_text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    defs = {m.group(1).strip().lower() for ln in lines for m in [_REF_DEF.match(ln)]
+            if m and not m.group(1).startswith("^")}
+    found, fence, in_table = [], None, False
+    for n, ln in enumerate(lines, 1):
+        fm = _FENCE.match(ln)
+        if fence:
+            if ln.strip().startswith(fence):
+                fence = None
+            continue
+        if fm:
+            fence = fm.group(1)
+            continue
+        if not ln.strip():
+            in_table = False
+            continue
+        nxt = lines[n] if n < len(lines) else ""
+        if not in_table and "|" in ln and _TABLE_SEP.match(nxt) and "-" in nxt:
+            in_table = True
+        elif in_table and "|" not in ln:
+            in_table = False
+        s = _CODE_SPAN.sub("", ln)
+        excerpt = ln.strip()[:70]
+        if _COMMENT.search(s):
+            found.append((n, "HTML comment", excerpt))
+        elif _INLINE_TAG.search(s):
+            found.append((n, "raw HTML", excerpt))
+        if _IMAGE.search(s):
+            found.append((n, "image", excerpt))
+        if _FOOTNOTE.search(s):
+            found.append((n, "footnote", excerpt))
+        if _ENTITY.search(s):
+            found.append((n, "HTML entity", excerpt))
+        for m in _REF_USE.finditer(s):
+            if (m.group(2) or m.group(1)).strip().lower() not in defs and not m.group(1).startswith("^"):
+                found.append((n, "reference link with no definition", excerpt))
+        if s.lstrip().startswith("|") and not in_table:
+            found.append((n, "pipe-table row outside a well-formed table", excerpt))
+    if fence:
+        found.append((len(lines), "unclosed code fence", fence))
+    return found
+
+
 def warnings(md_bytes):
-    return convert(md_bytes.decode("utf-8"))[2]
+    """Every unsupported construct as a sentence naming its line. Non-empty means REFUSE."""
+    return [f"line {n}: {what}: {excerpt}" for n, what, excerpt in unsupported(md_bytes.decode("utf-8"))]
 
 
 _WORD = re.compile(r"[^\W_]+")

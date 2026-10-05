@@ -4,7 +4,9 @@
     python3 _tools/build_legal_pages.py               # the real build: refuses unless both pins match
     python3 _tools/build_legal_pages.py --placeholder # pre-pack scaffold: builds from *-PLACEHOLDER.md
 
-FAILS CLOSED. The real build writes nothing unless EVERY pinned source exists and its sha256 starts
+FAILS CLOSED, TWICE. Any construct the converter does not render (raw HTML, comments, images,
+footnotes, entities, undefined reference links, stray pipe rows, an unclosed fence) refuses the
+build with its file, line and construct, and nothing is written. The real build also writes nothing unless EVERY pinned source exists and its sha256 starts
 EQUALS the ruled full digest (`legal_pins.PINS`). A placeholder build stamps every page with
 `legal_pins.PLACEHOLDER_MARKER`, which `check_site.py` refuses, so it can never pass the gate.
 Local files only: no git, no network.
@@ -25,6 +27,10 @@ SITE = HERE.parent
 
 class PinRefused(SystemExit):
     pass
+
+
+class ConstructRefused(SystemExit):
+    """A source uses markdown this converter does not render (ruling 553 Q7: fail closed)."""
 
 
 def verify(site, pins=None):
@@ -59,9 +65,12 @@ def build(site, placeholder=False, pins=None):
     else:
         sources = verify(site, pins)
         marker = None
+    refused = [f"{path.name} {w}" for route, (path, data) in sorted(sources.items())
+               for w in mdpage.warnings(data)]
+    if refused:
+        raise ConstructRefused("REFUSED (fail closed), nothing written: unsupported markdown\n  "
+                               + "\n  ".join(refused))
     for route, (path, data) in sources.items():
-        for w in mdpage.warnings(data):
-            print(f"WARNING {path.name}: {w}")
         page = mdpage.render_page(data, path.name, placeholder_marker=marker)
         out = site / route / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
