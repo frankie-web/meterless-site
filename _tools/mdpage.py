@@ -12,6 +12,8 @@ import hashlib
 import html
 import re
 
+import brand_fonts
+
 _FENCE = re.compile(r"^\s*(```|~~~)")
 _ATX = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 _HR = re.compile(r"^\s*(?:(?:\*\s*){3,}|(?:-\s*){3,}|(?:_\s*){3,})$")
@@ -276,14 +278,15 @@ def _list(lines, i, out, inline):
     return i
 
 
-CSS = """  :root{--ink:#152238;--ink-soft:#3D4A61;--teal:#0F8C7E;--line:#DDE3EA;--wash:#F7F8FA}
+CSS = brand_fonts.FONT_FACE_CSS + """  :root{--ink:#152238;--ink-soft:#3D4A61;--teal:#0F8C7E;--line:#DDE3EA;--wash:#F7F8FA}
   *{box-sizing:border-box}
   body{margin:0;background:#fff;color:var(--ink);
-       font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
-  .logo{display:inline-block;margin:24px 24px 0;font-weight:700;font-size:1.4rem;
+       font:16px/1.6 """ + brand_fonts.SANS + """}
+  .logo{display:inline-block;margin:24px 24px 0;font-family:""" + brand_fonts.DISPLAY + """;font-weight:700;font-size:1.4rem;
         letter-spacing:-.02em;color:var(--ink);text-decoration:none}
   .logo .dot{color:var(--teal)}
   main.legal{max-width:760px;margin:0 auto;padding:24px 24px 64px}
+  main.legal h1,main.legal h2,main.legal h3{font-family:""" + brand_fonts.DISPLAY + """;font-weight:700}
   main.legal h1{font-size:clamp(1.6rem,4.5vw,2.2rem);line-height:1.2;letter-spacing:-.02em}
   main.legal h2{font-size:1.3rem;margin-top:2em}
   main.legal h3{font-size:1.1rem;margin-top:1.6em}
@@ -293,8 +296,8 @@ CSS = """  :root{--ink:#152238;--ink-soft:#3D4A61;--teal:#0F8C7E;--line:#DDE3EA;
   main.legal th,main.legal td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;text-align:left}
   main.legal th{background:var(--wash)}
   main.legal blockquote{margin:1em 0;padding:0 1em;border-left:3px solid var(--line);color:var(--ink-soft)}
-  main.legal code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
-  .placeholder-banner{background:#B42318;color:#fff;font:700 14px/1.4 system-ui,sans-serif;padding:10px 24px}
+  main.legal code{font-family:""" + brand_fonts.MONO + """;font-size:.92em}
+  .placeholder-banner{background:#B42318;color:#fff;font:700 14px/1.4 """ + brand_fonts.SANS + """;padding:10px 24px}
 """
 
 

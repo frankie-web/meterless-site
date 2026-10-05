@@ -192,3 +192,51 @@ def test_NEGATIVE_CONTROL_a_plan_price_card_or_rate_goes_red(site, plant):
 def test_NEGATIVE_CONTROL_a_figure_hidden_in_alt_text_goes_red(site):
     _edit(site, "index.html", 'alt="meterless"', 'alt="meterless on 96GB cards"')
     assert _reds(site, "spec8_terms")
+
+
+# ── ruling 563: brand faces on every page that renders text ────────────────────────────────────
+def test_the_four_subpages_declare_the_brand_faces(site):
+    assert _reds(site, "brand_fonts") == []
+    for rel in ("privacy/index.html", "cookies/index.html", "joined/index.html", "waitlist/index.html"):
+        assert (site / rel).read_text().count("@font-face") == 6, rel
+
+
+@pytest.mark.parametrize("rel", ["joined/index.html", "waitlist/index.html", "privacy/index.html", "cookies/index.html"])
+def test_NEGATIVE_CONTROL_a_page_without_the_faces_goes_red(site, rel):
+    p = site / rel
+    p.write_text(re.sub(r"@font-face\{[^}]*\}\n?", "", p.read_text()))
+    assert any(rel == r["file"] for r in _reds(site, "brand_fonts"))
+
+
+def test_NEGATIVE_CONTROL_one_face_missing_goes_red(site):
+    p = site / "joined" / "index.html"
+    p.write_text(re.sub(r"@font-face\{font-family:'IBM Plex Mono';[^}]*font-weight:500;[^}]*\}\n?", "", p.read_text()))
+    assert any("missing" in r["detail"] for r in _reds(site, "brand_fonts"))
+
+
+def test_NEGATIVE_CONTROL_a_relative_src_on_a_subpage_goes_red(site):
+    """index.html's relative url(assets/fonts/...) copied to /privacy/ would ask /privacy/assets/fonts/."""
+    _edit(site, "privacy/index.html", "url(/assets/fonts/inter-latin-var.woff2)", "url(assets/fonts/inter-latin-var.woff2)")
+    assert any("/privacy/assets/fonts/" in r["detail"] for r in _reds(site, "brand_fonts"))
+
+
+def test_NEGATIVE_CONTROL_a_src_outside_assets_fonts_goes_red(site):
+    _edit(site, "cookies/index.html", "url(/assets/fonts/inter-latin-var.woff2)", "url(/assets/media/inter-latin-var.woff2)")
+    assert any("not a file under /assets/fonts/" in r["detail"] for r in _reds(site, "brand_fonts"))
+
+
+def test_NEGATIVE_CONTROL_a_third_party_face_goes_red_twice(site):
+    _edit(site, "waitlist/index.html", "url(/assets/fonts/inter-latin-var.woff2)", "url(https://fonts.gstatic.com/s/inter.woff2)")
+    assert _reds(site, "brand_fonts") and _reds(site, "third_party")
+
+
+def test_NEGATIVE_CONTROL_a_missing_font_file_goes_red(site):
+    (site / "assets" / "fonts" / "ibm-plex-mono-latin-400-normal.woff2").unlink()
+    assert len([r for r in _reds(site, "brand_fonts") if "ibm-plex-mono-latin-400" in r["detail"]]) >= 5
+
+
+def test_NEGATIVE_CONTROL_a_page_that_never_uses_the_brand_family_goes_red(site):
+    """Declaring a face is not using it: the faces stay, the one token naming Inter is dropped."""
+    _edit(site, "joined/index.html", "--font-sans: 'Inter', system-ui", "--font-sans: system-ui")
+    assert "'Inter'" in (site / "joined" / "index.html").read_text()      # still declared
+    assert any("Inter" in r["detail"] and r["file"] == "joined/index.html" for r in _reds(site, "brand_fonts"))

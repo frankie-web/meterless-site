@@ -16,6 +16,10 @@ phone header, clips reaching readyState 4 and looping) are in the QA harness, no
                   label exist, and a reduced-motion rule stops the wall, words, caret and resolve.
   spec6_gallery   every gallery clip has a non-empty caption; a reel item showing the same clip
                   carries the same prompt; every mp4 is H.264 (x264), 1280x720, 16 fps.
+  brand_fonts     (ruling 563) every published HTML page that renders text declares exactly the
+                  @font-face set index.html declares (family, weight, file), every src resolves to a
+                  file under /assets/fonts/ FROM THAT PAGE, and its CSS uses Inter and Bricolage
+                  Grotesque by name.
   spec8_terms     no plan name, price, card size, GPU model or per-hour figure on /, /waitlist or
                   /joined (visible text, alt, aria-label, title, placeholder, meta and script text).
 """
@@ -45,12 +49,15 @@ class _Doc(html.parser.HTMLParser):
         super().__init__(convert_charrefs=True)
         self.forms, self.anchors, self.ids, self.texts, self.attr_text = [], [], set(), [], []
         self.scripts, self.styles, self.figures, self.urls_in_attrs = [], [], [], []
+        self.inline_styles = []
         self._in, self._form, self._a, self._fig, self._cap = None, None, None, None, None
 
     def handle_starttag(self, tag, attrs):
         a = {k.lower(): (v or "") for k, v in attrs}
         if "id" in a:
             self.ids.add(a["id"])
+        if a.get("style"):
+            self.inline_styles.append(a["style"])
         for k, v in a.items():
             if re.search(r"https?://", v):
                 self.urls_in_attrs.append((tag, k, v))
@@ -251,6 +258,40 @@ def run(site, published):
         got = (st.get("codec_name"), st.get("width"), st.get("height"), st.get("r_frame_rate"))
         if got != ("h264", 1280, 720, "16/1"):
             red("spec6_gallery", rel, f"{got}; SPEC requires h264 1280x720 16 fps")
+
+    # ── ruling 563: the brand faces on every page that renders text ───────────────────────────
+    def faces(rel, css):
+        out, srcs = set(), []
+        for rule in re.findall(r"@font-face\s*\{([^}]*)\}", css):
+            fam = re.search(r"font-family:\s*['\"]?([^;'\"]+)", rule)
+            wt = re.search(r"font-weight:\s*([^;]+)", rule)
+            for u in re.findall(r"url\(\s*['\"]?([^'\")]+)", rule):
+                path_ = urlsplit(urljoin("https://meterless.com/" + "/".join(pathlib.PurePosixPath(rel).parts), u)).path
+                srcs.append((u, path_))
+                out.add(((fam.group(1).strip() if fam else ""), (wt.group(1).strip() if wt else "normal"),
+                         path_.rsplit("/", 1)[-1]))
+        return out, srcs
+
+    ref, _ = faces("index.html", "\n".join(d.styles))
+    if len(ref) != 6:
+        red("brand_fonts", "index.html", f"expected the 6 brand faces, found {len(ref)}")
+    for rel in published:
+        if rel.suffix != ".html":
+            continue
+        doc = _doc(site / rel)
+        if not "".join(doc.texts).strip():
+            continue                                  # a page with no text needs no face
+        css = "\n".join(doc.styles)
+        got, srcs = faces(str(rel), css)
+        if got != ref:
+            red("brand_fonts", rel, f"faces differ from index.html: missing {sorted(ref - got)}, extra {sorted(got - ref)}")
+        for u, path_ in srcs:
+            if not path_.startswith("/assets/fonts/") or not (site / path_.lstrip("/")).is_file():
+                red("brand_fonts", rel, f"face src {u} resolves to {path_}, not a file under /assets/fonts/")
+        used = re.sub(r"@font-face\s*\{[^}]*\}", "", css) + "\n".join(doc.inline_styles)
+        for fam in ("Inter", "Bricolage Grotesque"):
+            if fam not in used:
+                red("brand_fonts", rel, f"no font-family uses {fam}")
 
     # ── 8. no plan, price, card or per-hour figure ────────────────────────────────────────────
     for rel in ("index.html", "waitlist/index.html", "joined/index.html"):
