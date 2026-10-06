@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Build /privacy/index.html and /cookies/index.html from the two pinned markdown files in _legal/.
+"""Build /<route>/index.html for the six pinned markdown files in _legal/ (ruling 581): terms,
+refunds, acceptable-use, make-good, privacy and cookies.
 
-    python3 _tools/build_legal_pages.py               # the real build: refuses unless both pins match
+    python3 _tools/build_legal_pages.py               # the real build: refuses unless every pin matches
     python3 _tools/build_legal_pages.py --placeholder # pre-pack scaffold: builds from *-PLACEHOLDER.md
 
 FAILS CLOSED, TWICE. Any construct the converter does not render (raw HTML, comments, images,
 footnotes, entities, undefined reference links, stray pipe rows, an unclosed fence) refuses the
-build with its file, line and construct, and nothing is written. The real build also writes nothing unless EVERY pinned source exists and its sha256 starts
+build with its file, line and construct, and nothing is written. The real build also writes nothing unless EVERY pinned source exists and its sha256
 EQUALS the ruled full digest (`legal_pins.PINS`). A placeholder build stamps every page with
 `legal_pins.PLACEHOLDER_MARKER`, which `check_site.py` refuses, so it can never pass the gate.
 Local files only: no git, no network.

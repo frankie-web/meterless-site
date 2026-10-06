@@ -17,6 +17,7 @@ import build_legal_pages  # noqa: E402
 import check_site         # noqa: E402
 import legal_pins         # noqa: E402
 import mdpage             # noqa: E402
+import site_footer        # noqa: E402
 
 REAL = HERE.parent
 
@@ -57,7 +58,8 @@ INDEX = """<!DOCTYPE html>
 <input type="email" name="email" required><button type="submit">Join</button></form>
 </section>
 </main>
-<footer><a href="/privacy/">Privacy</a> <a href="/cookies/">Cookies</a>
+<footer><a href="/terms">Terms</a> <a href="/refunds">Refund Policy</a> <a href="/acceptable-use">Acceptable Use</a>
+<a href="/make-good">Make-Good</a> <a href="/privacy">Privacy Notice</a> <a href="/cookies">Cookies</a>
 <a href="mailto:support@meterless.com">support</a> <a href="https://example.org/x">x</a></footer>
 </body></html>
 """
@@ -152,26 +154,58 @@ def test_NEGATIVE_CONTROL_cookie_setting_goes_red(site, where, plant):
     assert _reds(site, "cookies")
 
 
-# ── terms ──────────────────────────────────────────────────────────────────────────────────────
-def test_NEGATIVE_CONTROL_a_terms_page_goes_red(site):
+# ── footer (ruling 581 item 4; replaces the retired `terms` check) ─────────────────────────────
+FOOTER_PAGES = ["index.html", "waitlist/index.html", "joined/index.html", "privacy/index.html", "cookies/index.html"]
+
+
+def test_a_terms_page_and_a_link_to_it_are_allowed_now(site):
+    """Ruling 581 publishes /terms: the old ban is retired, so neither the page nor a link is red."""
     s, _ = site
     (s / "terms").mkdir()
-    (s / "terms" / "index.html").write_text("<p>terms</p>")
-    assert _reds(site, "terms")
+    (s / "terms" / "index.html").write_text(
+        "<p>terms</p>" + site_footer.FOOTER_NAV_HTML)
+    assert _reds(site) == []
 
 
-def test_NEGATIVE_CONTROL_a_terms_html_file_goes_red(site):
+@pytest.mark.parametrize("page", FOOTER_PAGES)
+def test_NEGATIVE_CONTROL_a_page_missing_one_footer_link_goes_red(site, page):
     s, _ = site
-    (s / "terms.html").write_text("<p>terms</p>")
-    assert _reds(site, "terms")
+    p = s / page
+    text = p.read_text()
+    new = text.replace('>Make-Good</a>', '>Make Good</a>', 1)
+    assert new != text, page
+    p.write_text(new)
+    assert any(r["file"] == page for r in _reds(site, "footer"))
 
 
-@pytest.mark.parametrize("href", ["/terms", "/terms/", "https://meterless.com/terms", "terms.html"])
-def test_NEGATIVE_CONTROL_a_link_to_terms_goes_red(site, href):
+@pytest.mark.parametrize("old,new", [
+    ('href="/refunds"', 'href="https://meterless.com/refunds"'),     # not relative
+    ('href="/cookies"', 'href="/cookie"'),                           # wrong target
+    ('>Terms</a>', '>Terms of Service</a>'),                         # wrong label
+])
+def test_NEGATIVE_CONTROL_a_footer_link_off_contract_goes_red(site, old, new):
     s, _ = site
-    p = s / "index.html"
-    p.write_text(p.read_text().replace("</footer>", f'<a href="{href}">Terms</a></footer>'))
-    assert _reds(site, "terms")
+    p = s / "privacy" / "index.html"
+    text = p.read_text()
+    i = text.index("<footer")
+    p.write_text(text[:i] + text[i:].replace(old, new, 1))
+    assert any(r["file"] == "privacy/index.html" for r in _reds(site, "footer"))
+
+
+def test_NEGATIVE_CONTROL_footer_links_out_of_order_go_red(site):
+    s, _ = site
+    p = s / "waitlist" / "index.html"
+    text = p.read_text()
+    a, b = '<a href="/terms">Terms</a>', '<a href="/refunds">Refund Policy</a>'
+    assert a + b in text
+    p.write_text(text.replace(a + b, b + a, 1))
+    assert any(r["file"] == "waitlist/index.html" for r in _reds(site, "footer"))
+
+
+def test_NEGATIVE_CONTROL_a_page_with_no_footer_goes_red(site):
+    s, _ = site
+    (s / "about.html").write_text("<p>no footer here</p>")
+    assert any(r["file"] == "about.html" for r in _reds(site, "footer"))
 
 
 # ── legal ──────────────────────────────────────────────────────────────────────────────────────
@@ -227,6 +261,19 @@ def test_every_word_and_link_of_the_source_reaches_the_page(site):
     assert b"<table>" in page and b"<ol>" in page and b"<ul>" in page
 
 
+def test_NEGATIVE_CONTROL_a_link_the_source_does_not_carry_goes_red(site):
+    s, _ = site
+    p = s / "privacy" / "index.html"
+    p.write_text(p.read_text().replace("</main>", '<p><a href="https://example.net/extra">x</a></p>\n</main>'))
+    assert any("not in the source" in r["detail"] for r in _reds(site, "legal"))
+
+
+def test_NEGATIVE_CONTROL_a_link_dropped_from_the_page_goes_red(site, monkeypatch):
+    s, pins = site
+    monkeypatch.setattr(mdpage, "page_links", lambda b: set())
+    assert any("missing from the page" in r["detail"] for r in _reds(site, "legal"))
+
+
 def test_the_page_names_its_source_and_full_digest(site):
     s, _ = site
     page = (s / "cookies" / "index.html").read_text()
@@ -263,13 +310,29 @@ def test_NEGATIVE_CONTROL_a_form_that_no_longer_posts_to_the_waitlist_goes_red(s
 
 # ── the record ─────────────────────────────────────────────────────────────────────────────────
 def test_the_pins_are_the_ruled_full_digests():
-    """Ruling 554 (re-pins 553): full sha256, privacy is v1.3. A change here changes what the apex may serve."""
+    """Ruling 581 (re-pins 554): six routes, full sha256. A change here changes what the apex may serve."""
     assert legal_pins.PINS == {
-        "privacy": ("privacy-v1.3-2026-10-07.md",
-                    "e3c2c56737828eb7a3ca74763d139ed634df38290b47cc4b47167f46698faf51"),
-        "cookies": ("cookies-v1.2-2026-10-07.md",
-                    "1b7a8cdfffa35df000e551e168e870885b3f92f197ff00a9de8055f2654de433"),
+        "terms": ("terms-v1.3-2026-10-06.md",
+                  "3575731ae77317a82e3a32af0b7de482cfa0395c9cdce4257a7c609b2044ffd1"),
+        "refunds": ("refunds-v1.0-2026-10-06.md",
+                    "53e194d63b96f89f2e6db1d1acae42d5742052ee602fbaf72996c960acad723d"),
+        "acceptable-use": ("acceptable-use-v1.3-2026-10-06.md",
+                           "a392c6a4929bec2110f6fb7417a51e3dbd58a19babdf33df134725c9cb4e6352"),
+        "make-good": ("make-good-v1.3-2026-10-06.md",
+                      "9c340f6414873ae3fc954ac9e681e6f06d40f303114c2f8442353ca61e206be5"),
+        "privacy": ("privacy-v1.4-2026-10-06.md",
+                    "0e52379bc13017263994da4a58bec8e4d8a8330588cf455aa795f3f86928f7f3"),
+        "cookies": ("cookies-v1.3-2026-10-06.md",
+                    "1699656ba8955d06e1d992267f5abc7920c8498fbc287430750b01d4f8382ab4"),
     }
+
+
+def test_the_footer_is_the_ruled_six_in_order():
+    """Ruling 581 item 4: labels, order and relative targets."""
+    assert site_footer.FOOTER_LINKS == (
+        ("Terms", "/terms"), ("Refund Policy", "/refunds"), ("Acceptable Use", "/acceptable-use"),
+        ("Make-Good", "/make-good"), ("Privacy Notice", "/privacy"), ("Cookies", "/cookies"))
+    assert all(h.startswith("/") and not h.startswith("//") for _t, h in site_footer.FOOTER_LINKS)
 
 
 def test_NEGATIVE_CONTROL_a_source_matching_only_the_prefix_is_refused(site, tmp_path):

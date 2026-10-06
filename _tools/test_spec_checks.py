@@ -197,11 +197,14 @@ def test_NEGATIVE_CONTROL_a_figure_hidden_in_alt_text_goes_red(site):
 # ── ruling 563: brand faces on every page that renders text ────────────────────────────────────
 def test_the_four_subpages_declare_the_brand_faces(site):
     assert _reds(site, "brand_fonts") == []
-    for rel in ("privacy/index.html", "cookies/index.html", "joined/index.html", "waitlist/index.html"):
+    for rel in ("privacy/index.html", "cookies/index.html", "joined/index.html", "waitlist/index.html",
+                "terms/index.html", "refunds/index.html", "acceptable-use/index.html", "make-good/index.html"):
         assert (site / rel).read_text().count("@font-face") == 6, rel
 
 
-@pytest.mark.parametrize("rel", ["joined/index.html", "waitlist/index.html", "privacy/index.html", "cookies/index.html"])
+@pytest.mark.parametrize("rel", ["joined/index.html", "waitlist/index.html", "privacy/index.html", "cookies/index.html",
+                                 "terms/index.html", "refunds/index.html", "acceptable-use/index.html",
+                                 "make-good/index.html"])
 def test_NEGATIVE_CONTROL_a_page_without_the_faces_goes_red(site, rel):
     p = site / rel
     p.write_text(re.sub(r"@font-face\{[^}]*\}\n?", "", p.read_text()))

@@ -8,10 +8,11 @@ phone header, clips reaching readyState 4 and looping) are in the QA harness, no
                   text, and the MCP URL is text only, never an attribute (so never a request).
   spec3_forms     both forms on / (and the one on /waitlist) post to app.meterless.com/waitlist
                   with exactly one field: name="email", type email, required.
-  spec4_links     every same-origin link on / goes to /privacy or /cookies; every "Privacy Notice"
-                  link goes to /privacy and there is one per form; the footer carries Privacy and
-                  Cookies; every same-origin link on every page resolves to a published file and
-                  every #fragment to an id on its page.
+  spec4_links     every same-origin link on / goes to one of the six footer routes (ruling 581);
+                  every "Privacy Notice" link goes to /privacy and there is one per form plus the
+                  footer's; the footer carries the six links (site_footer.FOOTER_LINKS); every
+                  same-origin link on every page resolves to a published file and every #fragment
+                  to an id on its page.
   spec5_reel      the reel has 5 items on a 10 s interval, the pause copy and the "Open again"
                   label exist, and a reduced-motion rule stops the wall, words, caret and resolve.
   spec6_gallery   every gallery clip has a non-empty caption; a reel item showing the same clip
@@ -30,12 +31,16 @@ import pathlib
 import re
 import shutil
 import subprocess
+import sys
 from urllib.parse import urljoin, urlsplit
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import site_footer  # noqa: E402
 
 WAITLIST_ACTION = "https://app.meterless.com/waitlist"
 ALLOWED_ABSOLUTE = {WAITLIST_ACTION, "https://app.meterless.com/mcp"}
 TEXT_ONLY = {"https://app.meterless.com/mcp"}
-FOOTER_PATHS = {"/privacy", "/cookies"}
+FOOTER_PATHS = {h for _t, h in site_footer.FOOTER_LINKS}
 
 # ruling 518 / CW-21 slot 1: what the launch page must never name
 PLAN_NAMES = re.compile(r"\b(lite|core|pro|max\s?96)\b", re.I)
@@ -187,13 +192,14 @@ def run(site, published):
             continue
         path_ = urlsplit(urljoin("https://meterless.com/", h)).path.rstrip("/") or "/"
         if path_ not in FOOTER_PATHS:
-            red("spec4_links", "index.html", f"same-origin link to {h}; SPEC allows /privacy and /cookies only")
+            red("spec4_links", "index.html", f"same-origin link to {h}; SPEC allows the footer routes only: {sorted(FOOTER_PATHS)}")
     notice = [a for a in d.anchors if _norm(a["text"]) == "Privacy Notice"]
-    if len(notice) != len(d.forms) or any(a["href"].rstrip("/") != "/privacy" for a in notice):
-        red("spec4_links", "index.html", f"'Privacy Notice' links must be one per form, to /privacy: {notice}")
+    if len(notice) != len(d.forms) + 1 or any(a["href"].rstrip("/") != "/privacy" for a in notice):
+        red("spec4_links", "index.html", f"'Privacy Notice' links must be one per form plus the footer's, to /privacy: {notice}")
     texts = {_norm(a["text"]): a["href"].rstrip("/") for a in d.anchors}
-    if texts.get("Privacy") != "/privacy" or texts.get("Cookies") != "/cookies":
-        red("spec4_links", "index.html", "the footer must carry Privacy -> /privacy and Cookies -> /cookies")
+    for label, href in site_footer.FOOTER_LINKS:
+        if texts.get(label) != href:
+            red("spec4_links", "index.html", f"the footer must carry {label} -> {href}")
     for rel in published:
         if rel.suffix != ".html":
             continue

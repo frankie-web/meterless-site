@@ -13,6 +13,7 @@ import html
 import re
 
 import brand_fonts
+import site_footer
 
 _FENCE = re.compile(r"^\s*(```|~~~)")
 _ATX = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
@@ -297,6 +298,9 @@ CSS = brand_fonts.FONT_FACE_CSS + """  :root{--ink:#152238;--ink-soft:#3D4A61;--
   main.legal th{background:var(--wash)}
   main.legal blockquote{margin:1em 0;padding:0 1em;border-left:3px solid var(--line);color:var(--ink-soft)}
   main.legal code{font-family:""" + brand_fonts.MONO + """;font-size:.92em}
+  footer.site{max-width:760px;margin:0 auto;padding:24px 24px 48px;border-top:1px solid var(--line)}
+  footer.site .footer-links{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.9rem}
+  footer.site .footer-links a{color:var(--ink-soft)}
   .placeholder-banner{background:#B42318;color:#fff;font:700 14px/1.4 """ + brand_fonts.SANS + """;padding:10px 24px}
 """
 
@@ -325,6 +329,7 @@ def render_page(md_bytes, source_name, placeholder_marker=None):
 <main class="legal">
 {body}
 </main>
+<footer class="site">{site_footer.FOOTER_NAV_HTML}</footer>
 </body>
 </html>
 """
@@ -420,6 +425,7 @@ def source_links(md_text):
     targets = set(re.findall(r"\]\(\s*(\S+?)(?:\s+\"[^\"]*\")?\s*\)", md_text))
     targets |= {m.group(2) for ln in md_text.split("\n") for m in [_REF_DEF.match(ln)] if m}
     targets |= set(re.findall(r"<((?:https?://|mailto:)[^\s>]+)>", md_text))
+    targets |= {"mailto:" + a for a in re.findall(r"<([^\s@<>&]+@[^\s@<>&]+\.[^\s@<>&]+)>", md_text)}
     return targets
 
 

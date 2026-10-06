@@ -1,19 +1,29 @@
-"""The two legal documents the apex serves, and the FULL sha256 each must carry (ruling 554, re-pinning 553).
+"""The six legal documents the apex serves, and the FULL sha256 each must carry (ruling 581;
+earlier pins: rulings 553 and 554).
 
-Served UNEDITED: the page is built from the file, and the file is refused unless its sha256 starts
-exactly the full digest below (never a prefix). Nothing may change these digests except a new ruling;
+Served UNEDITED: the page is built from the file, and the file is refused unless its sha256 EQUALS
+the full digest below (never a prefix). Nothing may change these digests except a new ruling;
 a file that does not match is not served, it fails the build (fail closed).
 
 Directory `_legal/` is excluded from publishing by GitHub Pages (Jekyll skips paths starting with
-an underscore), so the sources live in the repository without becoming routes of their own.
+an underscore), so the sources live in the repository without becoming routes of their own. The
+superseded sources (privacy v1.3, cookies v1.2) stay there as history and are not pinned.
 """
 
 # route  ->  (source file in _legal/, required full sha256)
 PINS = {
-    "privacy": ("privacy-v1.3-2026-10-07.md",
-                "e3c2c56737828eb7a3ca74763d139ed634df38290b47cc4b47167f46698faf51"),
-    "cookies": ("cookies-v1.2-2026-10-07.md",
-                "1b7a8cdfffa35df000e551e168e870885b3f92f197ff00a9de8055f2654de433"),
+    "terms": ("terms-v1.3-2026-10-06.md",
+              "3575731ae77317a82e3a32af0b7de482cfa0395c9cdce4257a7c609b2044ffd1"),
+    "refunds": ("refunds-v1.0-2026-10-06.md",
+                "53e194d63b96f89f2e6db1d1acae42d5742052ee602fbaf72996c960acad723d"),
+    "acceptable-use": ("acceptable-use-v1.3-2026-10-06.md",
+                       "a392c6a4929bec2110f6fb7417a51e3dbd58a19babdf33df134725c9cb4e6352"),
+    "make-good": ("make-good-v1.3-2026-10-06.md",
+                  "9c340f6414873ae3fc954ac9e681e6f06d40f303114c2f8442353ca61e206be5"),
+    "privacy": ("privacy-v1.4-2026-10-06.md",
+                "0e52379bc13017263994da4a58bec8e4d8a8330588cf455aa795f3f86928f7f3"),
+    "cookies": ("cookies-v1.3-2026-10-06.md",
+                "1699656ba8955d06e1d992267f5abc7920c8498fbc287430750b01d4f8382ab4"),
 }
 
 # Placeholder sources, used ONLY by `build_legal_pages.py --placeholder` before the pack lands.

@@ -11,11 +11,15 @@ Checks, each with a negative control in `test_check_site.py`:
                Only relative URLs and meterless.com are allowed. A plain <a href> is navigation,
                not a request, and is LISTED, not failed. A form may post only to app.meterless.com.
   cookies      no script touches document.cookie or cookieStore; no <meta http-equiv=set-cookie>.
-  terms        no /terms page is published and nothing links to one.
-  legal        /privacy and /cookies are byte-for-byte what `build_legal_pages.py` makes from the
-               pinned source, whose sha256 must EQUAL the ruled full digest
-               and which uses no construct the converter refuses; every word of the
-               source appears, in order, on the page.
+  footer       (ruling 581 item 4) every published HTML page carries site_footer.FOOTER_LINKS as one
+               unbroken run of anchors: the same labels, the same relative hrefs, the same order.
+               (The old `terms` check, which refused any /terms page, is retired by ruling 581,
+               which publishes /terms.)
+  legal        each of the six pinned routes (terms, refunds, acceptable-use, make-good, privacy,
+               cookies) is byte-for-byte what `build_legal_pages.py` makes from the pinned source,
+               whose sha256 must EQUAL the ruled full digest and which uses no construct the
+               converter refuses; every word of the source appears, in order, on the page; and the
+               page's link set EQUALS the source's link set.
   placeholder  no published file carries the placeholder marker.
   markdown     no .md file is published (GitHub Pages would render it as a route of its own).
   waitlist     / and /waitlist carry the form that posts to app.meterless.com/waitlist with an
@@ -39,6 +43,7 @@ sys.path.insert(0, str(HERE))
 
 import legal_pins  # noqa: E402
 import mdpage      # noqa: E402
+import site_footer  # noqa: E402
 import spec_checks  # noqa: E402
 
 SITE = HERE.parent
@@ -89,6 +94,8 @@ class _Page(html.parser.HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.resources, self.navigation, self.forms, self.scripts, self.styles = [], [], [], [], []
+        self.anchors = []                     # [(href, text)] in document order
+        self._a = None
         self.meta_cookie = False
         self._in = None
         self._form = None
@@ -111,6 +118,9 @@ class _Page(html.parser.HTMLParser):
                 self.scripts.append(v)
             elif k in ("href", "xlink:href") and tag in ("a", "area"):
                 self.navigation.append(v)
+                if tag == "a" and k == "href":
+                    self._a = [v, ""]
+                    self.anchors.append(self._a)
             elif k in ("action", "formaction"):
                 pass
             elif k == "srcset" or k == "imagesrcset":
@@ -128,12 +138,16 @@ class _Page(html.parser.HTMLParser):
             self._in = tag
 
     def handle_endtag(self, tag):
+        if tag == "a":
+            self._a = None
         if tag == "form":
             self._form = None
         if tag in ("script", "style"):
             self._in = None
 
     def handle_data(self, data):
+        if self._a is not None and self._in is None:
+            self._a[1] += data
         if self._in == "script":
             self.scripts.append(data)
         elif self._in == "style":
@@ -183,10 +197,13 @@ def check(site=SITE, pins=None, spec=True):
                 h = _host(nav)
                 if h:
                     info["navigation_offsite"].append(f"{rel}: {nav}")
-                if h == "":
-                    path_ = urlsplit(urljoin(_page_url(rel), nav)).path
-                    if re.match(r"^/terms(/|\.html?|/index\.html?)?$", path_):
-                        red("terms", rel, f"links to {nav}")
+            if suffix in (".html", ".htm"):
+                got = [(" ".join(t.split()), href) for href, t in p.anchors]
+                want = list(site_footer.FOOTER_LINKS)
+                runs = [i for i in range(len(got) - len(want) + 1) if got[i:i + len(want)] == want]
+                if len(runs) != 1:
+                    red("footer", rel, f"expected the footer run {[t for t, _h in want]} exactly once, "
+                                       f"found it {len(runs)} time(s)")
             if rel.name in ("index.html",) and (rel.parent == pathlib.Path(".") or str(rel.parent) == "waitlist"):
                 ok = any(f["action"] == WAITLIST_ACTION and f["method"] == "post" and "email" in f["fields"] for f in p.forms)
                 if not ok:
@@ -205,11 +222,6 @@ def check(site=SITE, pins=None, spec=True):
             h = _host(ref)
             if h:
                 red("third_party", rel, f"{where} -> {h} ({ref[:100]})")
-
-    # /terms
-    for rel, _p in files:
-        if re.match(r"^terms(\.[a-z]+)?$", rel.parts[0], re.I):
-            red("terms", rel, "a /terms page is published")
 
     # legal pages
     for route, (name, pinned) in sorted(pins.items()):
@@ -235,9 +247,11 @@ def check(site=SITE, pins=None, spec=True):
             red("legal", f"{route}/index.html", "is not the page the pinned source builds (edited, stale, or a placeholder)")
         if mdpage.source_words(data.decode("utf-8")) != mdpage.page_words(served):
             red("legal", f"{route}/index.html", "the words of the page are not the words of the source, in order")
-        missing = mdpage.source_links(data.decode("utf-8")) - mdpage.page_links(served)
-        if missing:
-            red("legal", f"{route}/index.html", f"source links missing from the page: {sorted(missing)[:5]}")
+        want_links, got_links = mdpage.source_links(data.decode("utf-8")), mdpage.page_links(served)
+        if want_links - got_links:
+            red("legal", f"{route}/index.html", f"source links missing from the page: {sorted(want_links - got_links)[:5]}")
+        if got_links - want_links:
+            red("legal", f"{route}/index.html", f"page links not in the source: {sorted(got_links - want_links)[:5]}")
 
     # SPEC.md section 2 of the PM pack (ruling 561); the browser half is in the QA harness
     if spec:
