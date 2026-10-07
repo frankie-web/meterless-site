@@ -2,12 +2,14 @@
 earlier pins: rulings 553 and 554).
 
 Served UNEDITED: the page is built from the file, and the file is refused unless its sha256 EQUALS
-the full digest below (never a prefix). Nothing may change these digests except a new ruling;
+the full digest below (never a prefix). Nothing may change these digests except a new ruling
+(ruling 588, 7 Oct 2026: acceptable-use moves to v1.4, the Paddle content rules);
 a file that does not match is not served, it fails the build (fail closed).
 
 Directory `_legal/` is excluded from publishing by GitHub Pages (Jekyll skips paths starting with
 an underscore), so the sources live in the repository without becoming routes of their own. The
-superseded sources (privacy v1.3, cookies v1.2) stay there as history and are not pinned.
+superseded sources (privacy v1.3, cookies v1.2, acceptable-use v1.3) stay there as history and are not
+pinned.
 """
 
 # route  ->  (source file in _legal/, required full sha256)
@@ -16,8 +18,8 @@ PINS = {
               "3575731ae77317a82e3a32af0b7de482cfa0395c9cdce4257a7c609b2044ffd1"),
     "refunds": ("refunds-v1.0-2026-10-06.md",
                 "53e194d63b96f89f2e6db1d1acae42d5742052ee602fbaf72996c960acad723d"),
-    "acceptable-use": ("acceptable-use-v1.3-2026-10-06.md",
-                       "a392c6a4929bec2110f6fb7417a51e3dbd58a19babdf33df134725c9cb4e6352"),
+    "acceptable-use": ("acceptable-use-v1.4-2026-10-07.md",
+                       "d5e6789dccb6f4e30e86475754f6163b7206427e4651a20f13fdee352c749b28"),
     "make-good": ("make-good-v1.3-2026-10-06.md",
                   "9c340f6414873ae3fc954ac9e681e6f06d40f303114c2f8442353ca61e206be5"),
     "privacy": ("privacy-v1.4-2026-10-06.md",
